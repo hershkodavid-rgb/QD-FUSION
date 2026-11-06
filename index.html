@@ -1,0 +1,2826 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>QD FUSION</title>
+<meta name="description" content="QD FUSION — מנועי QD Opportunity ו-QD Risk, בדיקה היסטורית ותיק איתמר 2040">
+<meta name="theme-color" content="#F2F5F4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A1211" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="QD FUSION">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap">
+<style>
+/* Layout: instrument panel. Sticky header; phone = one column + bottom tab bar; desktop = right-side rail (RTL) + content. */
+:root {
+  --bg: #F2F5F4;
+  --surface: #FFFFFF;
+  --surface-2: #E9EFED;
+  --ink: #0F1D1C;
+  --ink-2: #455654;
+  --muted: #6F807E;
+  --line: #D3DCDA;
+  --accent: #0A6A68;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCEDEA;
+  --opp: #17784A;
+  --opp-soft: #DFF1E6;
+  --risk: #B4372B;
+  --risk-soft: #F8E2DE;
+  --warn: #8F5B00;
+  --warn-soft: #FBEFD6;
+  --info-soft: #E3ECF7;
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --s3: #1baf7a;
+  --s4: #eda100;
+  --s5: #e87ba4;
+  --neg: #e34948;
+  --grid: #E1E6E4;
+  --axis: #B9C4C1;
+  --shadow: 0 1px 2px rgba(15, 29, 28, .06), 0 4px 16px rgba(15, 29, 28, .05);
+  --f-display: "Secular One", "IBM Plex Sans Hebrew", system-ui, -apple-system, "Arial Hebrew", sans-serif;
+  --f-body: "IBM Plex Sans Hebrew", system-ui, -apple-system, "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r: 12px;
+  --r-sm: 8px;
+  --header-h: 56px;
+  --nav-h: 64px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1211; --surface: #111C1B; --surface-2: #182624; --ink: #E2ECEA; --ink-2: #AFC1BE;
+    --muted: #82948F; --line: #263533; --accent: #3DB5AF; --accent-ink: #04201E; --accent-soft: #143331;
+    --opp: #43C283; --opp-soft: #12301F; --risk: #EE6D60; --risk-soft: #3A1915; --warn: #E6A93D;
+    --warn-soft: #33270E; --info-soft: #172537;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --neg: #e66767; --grid: #22302E; --axis: #3A4A47;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1211; --surface: #111C1B; --surface-2: #182624; --ink: #E2ECEA; --ink-2: #AFC1BE;
+  --muted: #82948F; --line: #263533; --accent: #3DB5AF; --accent-ink: #04201E; --accent-soft: #143331;
+  --opp: #43C283; --opp-soft: #12301F; --risk: #EE6D60; --risk-soft: #3A1915; --warn: #E6A93D;
+  --warn-soft: #33270E; --info-soft: #172537;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --neg: #e66767; --grid: #22302E; --axis: #3A4A47;
+  --shadow: 0 1px 2px rgba(0,0,0,.4);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  -webkit-tap-highlight-color: rgba(10, 106, 104, .15);
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface);
+}
+.app { direction: rtl; min-height: 100%; }
+h1, h2, h3 { line-height: 1.2; margin: 0; text-wrap: balance; }
+h1 { font-family: var(--f-display); font-weight: 400; font-size: 1.75rem; letter-spacing: .01em; }
+h2 { font-size: 1.08rem; font-weight: 700; }
+h3 { font-size: .98rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.num, .data { font-family: var(--f-data); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.muted { color: var(--muted); }
+.small { font-size: .86rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- header */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; text-decoration: none; color: inherit; }
+.brand svg { flex: none; }
+.brand-name { font-family: var(--f-data); font-weight: 600; font-size: 1rem; letter-spacing: .08em; direction: ltr; }
+.brand-sub { font-size: .76rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .76rem;
+  border: 1px solid var(--line); color: var(--ink-2); background: var(--surface); white-space: nowrap;
+}
+.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+.badge.ok .dot { background: var(--opp); }
+.badge.bad { color: var(--risk); border-color: var(--risk); }
+.badge.bad .dot { background: var(--risk); }
+
+/* ---------- banner + toast */
+.banner {
+  display: flex; gap: 10px; align-items: flex-start; justify-content: space-between;
+  background: var(--risk-soft); color: var(--ink); border-bottom: 1px solid var(--risk);
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  font-size: .9rem;
+}
+.banner button { flex: none; }
+.toast {
+  position: fixed; z-index: 40; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none;
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 12px);
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 999px; font-size: .9rem;
+  transition: opacity .2s, transform .2s; max-width: calc(100% - 32px); text-align: center;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- shell + nav */
+.shell { display: block; }
+main {
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 28px);
+  max-width: 1180px; margin: 0 auto; min-width: 0;
+}
+.tabs {
+  position: fixed; z-index: 25; inset: auto 0 0 0; display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px);
+}
+.tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-height: var(--nav-h); padding: 6px 4px; text-decoration: none; color: var(--muted); font-size: .72rem; font-weight: 500;
+  text-align: center; line-height: 1.2; cursor: pointer; touch-action: manipulation; position: relative;
+}
+.tab svg { width: 24px; height: 24px; }
+.tab[aria-current="page"] { color: var(--accent); }
+.tab[aria-current="page"]::after {
+  content: ""; position: absolute; top: 0; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent);
+}
+body.kb .tabs { display: none; }
+@media (min-width: 960px) {
+  .shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); align-items: start; }
+  .tabs {
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--header-h)); inset: auto; display: flex; flex-direction: column; gap: 4px;
+    height: calc(100vh - var(--header-h)); border-top: 0; border-left: 1px solid var(--line); padding: 18px 12px;
+  }
+  .tab { flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 46px; padding: 8px 14px; border-radius: var(--r-sm); font-size: .95rem; }
+  .tab:hover { background: var(--surface-2); color: var(--ink); }
+  .tab[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+  .tab[aria-current="page"]::after { display: none; }
+  main { padding-block: 26px 48px; }
+  body.kb .tabs { display: flex; }
+  .toast { bottom: 24px; }
+}
+
+/* ---------- views + common blocks */
+.view { display: flex; flex-direction: column; gap: 18px; }
+.view-head { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-family: var(--f-data); font-size: .72rem; letter-spacing: .14em; color: var(--accent); direction: ltr; text-align: right; }
+.lede { color: var(--ink-2); max-width: 68ch; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.empty {
+  border: 1.5px dashed var(--line); border-radius: var(--r); padding: 18px; text-align: center; color: var(--ink-2);
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+
+/* ---------- buttons + fields */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px 16px;
+  border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  font-weight: 600; font-size: .92rem; cursor: pointer; touch-action: manipulation; text-decoration: none;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.danger { color: var(--risk); border-color: var(--risk); }
+.btn.danger.armed { background: var(--risk); color: #fff; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--accent); }
+.btn.sm { min-height: 36px; padding: 4px 12px; font-size: .85rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field > label, .lbl { font-size: .84rem; font-weight: 600; color: var(--ink-2); }
+.field .hint { font-size: .78rem; color: var(--muted); }
+.input, .select, .textarea {
+  width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--bg); color: var(--ink); font-size: 16px;
+}
+.textarea { min-height: 120px; font-family: var(--f-data); font-size: 13px; direction: ltr; text-align: left; }
+.input.numeric { direction: ltr; text-align: right; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.input[aria-invalid="true"] { border-color: var(--risk); background: var(--risk-soft); }
+.input:disabled { opacity: .75; }
+.num-wrap { display: flex; align-items: stretch; gap: 6px; }
+.num-wrap .input { flex: 1; min-width: 0; }
+.unit { display: inline-flex; align-items: center; min-width: 30px; justify-content: center; color: var(--muted); font-size: .85rem; }
+.pm { flex: none; width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); cursor: pointer; font-family: var(--f-data); font-size: 1rem; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.file-label { position: relative; overflow: hidden; }
+.file-label input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+
+/* ---------- chips / status */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: .78rem; font-weight: 600;
+  background: var(--surface-2); color: var(--ink-2); white-space: nowrap;
+}
+.chip svg { width: 13px; height: 13px; }
+.chip.good { background: var(--opp-soft); color: var(--opp); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.bad { background: var(--risk-soft); color: var(--risk); }
+.chip.info { background: var(--info-soft); color: var(--ink-2); }
+.chip.demo { background: var(--warn-soft); color: var(--warn); border: 1px dashed var(--warn); }
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.note { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: var(--r-sm); font-size: .88rem; background: var(--info-soft); }
+.note svg { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+.note.warn { background: var(--warn-soft); }
+.note.warn svg { color: var(--warn); }
+.note.error { background: var(--risk-soft); }
+.note.error svg { color: var(--risk); }
+.note.good { background: var(--opp-soft); }
+.note.good svg { color: var(--opp); }
+.note a { font-weight: 600; }
+
+/* ---------- tables */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: var(--r-sm); }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-size: .76rem; font-weight: 600; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: left; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--surface-2); }
+
+/* ---------- scoring */
+.score-strip {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--header-h)); z-index: 15;
+  display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; align-items: stretch;
+  background: var(--bg); padding-block: 8px; margin-block: -8px 0;
+}
+.strip-cell { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 6px 10px; min-width: 0; }
+.strip-cell .k { font-size: .7rem; color: var(--muted); white-space: nowrap; }
+.strip-cell .v { font-family: var(--f-data); font-size: 1.25rem; font-weight: 600; line-height: 1.2; }
+.strip-cell .v.opp { color: var(--opp); }
+.strip-cell .v.risk { color: var(--risk); }
+.strip-cell .d { font-weight: 700; font-size: .9rem; line-height: 1.25; }
+.asset-bar { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 760px) { .asset-bar { grid-template-columns: minmax(0, 1.2fr) auto; align-items: end; } }
+.asset-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.engine-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.engine-title small { display: block; font-family: var(--f-data); font-size: .74rem; color: var(--muted); letter-spacing: .06em; direction: ltr; text-align: right; }
+.big-score { font-family: var(--f-data); font-size: 2.6rem; font-weight: 600; line-height: 1; text-align: left; direction: ltr; }
+.big-score.opp { color: var(--opp); }
+.big-score.risk { color: var(--risk); }
+.big-score .of { font-size: .9rem; color: var(--muted); font-weight: 400; }
+.cov { font-size: .8rem; color: var(--ink-2); text-align: left; }
+.gauge { position: relative; height: 34px; direction: ltr; }
+.gauge .track { position: absolute; left: 0; right: 0; top: 6px; height: 10px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+.gauge .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; transition: width .25s; }
+.gauge.opp .fill { background: var(--opp); }
+.gauge.risk .fill { background: var(--risk); }
+.gauge .th { position: absolute; top: 2px; width: 2px; height: 18px; background: var(--ink); }
+.gauge .ticks { position: absolute; left: 0; right: 0; top: 19px; display: flex; justify-content: space-between; font-family: var(--f-data); font-size: .68rem; color: var(--muted); }
+.comp { border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); }
+.comp > summary {
+  list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center;
+  padding: 10px 12px; min-height: 48px;
+}
+.comp > summary::-webkit-details-marker { display: none; }
+.comp > summary .cname { font-weight: 600; }
+.comp > summary .cw { font-family: var(--f-data); font-size: .76rem; color: var(--muted); }
+.comp > summary .cs { font-family: var(--f-data); font-weight: 600; min-width: 3ch; text-align: left; }
+.comp > summary::after { content: "▾"; color: var(--muted); font-size: .8rem; transition: transform .15s; grid-column: 3; grid-row: 1; justify-self: end; }
+.comp[open] > summary::after { transform: rotate(180deg); }
+.comp > summary .cs { grid-column: 2; }
+.comp .cbody { border-top: 1px solid var(--line); padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.comp.na { opacity: .7; }
+.ind { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.ind-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.ind-top label { font-size: .86rem; font-weight: 600; }
+.ind-out { font-family: var(--f-data); font-size: .8rem; color: var(--ink-2); white-space: nowrap; }
+.ind .hint { font-size: .76rem; color: var(--muted); }
+.scope { font-size: .68rem; font-weight: 600; padding: 1px 6px; border-radius: 4px; background: var(--info-soft); color: var(--ink-2); margin-inline-start: 6px; }
+.na-toggle { display: flex; align-items: center; gap: 8px; font-size: .84rem; color: var(--ink-2); min-height: 36px; }
+.na-toggle input { width: 20px; height: 20px; accent-color: var(--accent); }
+.breakdown td .bar { height: 6px; border-radius: 3px; background: var(--surface-2); position: relative; min-width: 60px; direction: ltr; }
+.breakdown td .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; }
+.engine.opp .breakdown td .bar i { background: var(--opp); }
+.engine.risk .breakdown td .bar i { background: var(--risk); }
+.decision { display: flex; flex-direction: column; gap: 10px; }
+.decision-label { font-family: var(--f-display); font-size: 1.6rem; line-height: 1.15; }
+.decision.good .decision-label { color: var(--opp); }
+.decision.warn .decision-label { color: var(--warn); }
+.decision.bad .decision-label { color: var(--risk); }
+.matrix-wrap { width: 100%; max-width: 440px; margin-inline: auto; }
+.matrix-wrap svg { width: 100%; height: auto; display: block; }
+.fusion-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .fusion-grid { grid-template-columns: 1fr 1fr; align-items: center; } }
+.disclaimer { font-size: .78rem; color: var(--muted); }
+
+/* ---------- charts */
+.chart { position: relative; width: 100%; touch-action: pan-y; }
+.chart svg { display: block; width: 100%; overflow: visible; }
+.chart .tip {
+  position: absolute; pointer-events: none; z-index: 5; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+  box-shadow: var(--shadow); padding: 8px 10px; font-size: .78rem; min-width: 170px; direction: rtl;
+}
+.chart .tip .t { font-family: var(--f-data); color: var(--muted); margin-bottom: 4px; direction: ltr; text-align: right; }
+.chart .tip .r { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .82rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; flex: none; }
+.sw.dash { background: repeating-linear-gradient(90deg, var(--muted) 0 4px, transparent 4px 7px) !important; }
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: grid; grid-template-columns: minmax(90px, 1.1fr) 2fr auto; gap: 10px; align-items: center; font-size: .85rem; }
+.bar-row .lane { position: relative; height: 18px; background: var(--surface-2); border-radius: 4px; direction: ltr; }
+.bar-row .lane .act { position: absolute; left: 0; top: 4px; height: 10px; border-radius: 3px; background: var(--accent); }
+.bar-row .lane .tgt { position: absolute; top: 0; width: 2px; height: 18px; background: var(--ink); }
+
+/* ---------- dashboard */
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 760px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.kpi { display: flex; flex-direction: column; gap: 2px; padding: 12px; border-radius: var(--r-sm); background: var(--surface-2); min-width: 0; }
+.kpi .k { font-size: .76rem; color: var(--muted); }
+.kpi .v { font-family: var(--f-data); font-size: 1.3rem; font-weight: 600; overflow-wrap: anywhere; }
+.kpi .s { font-size: .76rem; color: var(--ink-2); }
+.holding { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.holding-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 760px) { .holding-grid { grid-template-columns: 1.4fr .8fr 1fr .7fr 1fr; } }
+.holding-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .84rem; }
+.slot { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.slot-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+.heatmap td.heat.cur { outline: 2px solid var(--ink); outline-offset: -2px; font-weight: 700; }
+.heatmap th { text-align: center; white-space: normal; }
+.heatmap th, .heatmap td { padding: 8px 6px; font-size: .8rem; }
+.sim-tag { display: inline-flex; align-items: center; gap: 6px; font-size: .76rem; font-weight: 700; color: var(--warn); background: var(--warn-soft); border: 1px dashed var(--warn); padding: 2px 10px; border-radius: 999px; }
+details.method summary, details.more summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.method table td:first-child { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div id="app" class="app" dir="rtl" lang="he">
+  <header class="topbar">
+    <a class="brand" href="#dashboard" data-nav="dashboard" aria-label="QD FUSION – לוח בקרה">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="12" cy="16" r="9" fill="none" stroke="var(--opp)" stroke-width="3"/>
+        <circle cx="20" cy="16" r="9" fill="none" stroke="var(--risk)" stroke-width="3"/>
+        <path d="M16 8.6a9 9 0 0 1 0 14.8a9 9 0 0 1 0-14.8z" fill="var(--accent)"/>
+      </svg>
+      <span>
+        <span class="brand-name">QD FUSION</span><br>
+        <span class="brand-sub">מחקר כמותי · תיק איתמר 2040</span>
+      </span>
+    </a>
+    <span id="storageBadge" class="badge" role="status"><span class="dot"></span><span class="t">בודק אחסון…</span></span>
+  </header>
+
+  <div id="banner" class="banner" role="alert" hidden>
+    <div id="bannerText"></div>
+    <button type="button" class="btn sm" data-action="dismiss-banner">סגור</button>
+  </div>
+
+  <div class="shell">
+    <nav class="tabs" aria-label="ניווט ראשי">
+      <a class="tab" href="#dashboard" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="4.5" rx="1.5"/><rect x="13.5" y="11" width="7" height="9.5" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+        <span>לוח בקרה</span>
+      </a>
+      <a class="tab" href="#scoring" data-nav="scoring">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 16a8 8 0 0 1 16 0"/><path d="M12 16l4.2-5"/><circle cx="12" cy="16" r="1.4" fill="currentColor"/><path d="M3 20h18"/></svg>
+        <span>מנועי ציון</span>
+      </a>
+      <a class="tab" href="#backtest" data-nav="backtest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4v16h18"/><path d="M6.5 15l4-4.5 3 2.5 5.5-6.5"/></svg>
+        <span>בדיקה היסטורית</span>
+      </a>
+      <a class="tab" href="#portfolio" data-nav="portfolio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6.2 5.8"/></svg>
+        <span>תיק איתמר 2040</span>
+      </a>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <section id="view-dashboard" class="view" aria-labelledby="h-dashboard"></section>
+      <section id="view-scoring" class="view" aria-labelledby="h-scoring" hidden></section>
+      <section id="view-backtest" class="view" aria-labelledby="h-backtest" hidden></section>
+      <section id="view-portfolio" class="view" aria-labelledby="h-portfolio" hidden></section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     0. Small utilities
+     ===================================================================== */
+  var DOC = document;
+  try { DOC.documentElement.lang = 'he'; DOC.documentElement.dir = 'rtl'; } catch (e) { /* ignore */ }
+
+  function $(sel, r) { return (r || DOC).querySelector(sel); }
+  function $$(sel, r) { return Array.prototype.slice.call((r || DOC).querySelectorAll(sel)); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  function isNum(x) { return typeof x === 'number' && isFinite(x); }
+  function avg(a) { return a.length ? a.reduce(function (s, x) { return s + x; }, 0) / a.length : null; }
+  function uid() { return Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4); }
+  function deepCopy(o) { return JSON.parse(JSON.stringify(o)); }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function isoUTC(t) { var d = new Date(t); return d.getUTCFullYear() + '-' + pad2(d.getUTCMonth() + 1) + '-' + pad2(d.getUTCDate()); }
+  function todayISO() { var d = new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+  function daysBetweenISO(a, b) {
+    var ta = Date.parse(a + 'T00:00:00Z'), tb = Date.parse(b + 'T00:00:00Z');
+    if (!isFinite(ta) || !isFinite(tb)) return null;
+    return Math.round((tb - ta) / 86400000);
+  }
+  var LRM = '‎';
+
+  function makeNF(opts) { try { return new Intl.NumberFormat('he-IL', opts); } catch (e) { return new Intl.NumberFormat('en-US', opts); } }
+  var NF = { 0: makeNF({ maximumFractionDigits: 0 }), 1: makeNF({ maximumFractionDigits: 1 }), 2: makeNF({ maximumFractionDigits: 2 }) };
+  function fmt(x, d) { if (!isNum(x)) return '—'; return NF[d == null ? 1 : d].format(x); }
+  /* signed values get a left-to-right mark so "+12%" does not render as "12%+" inside Hebrew text */
+  function fmtSigned(x, d) { if (!isNum(x)) return '—'; return '‎' + (x > 0 ? '+' : '') + fmt(x, d); }
+  function fmtPct(x, d) { if (!isNum(x)) return '—'; return '‎' + fmt(x, d == null ? 1 : d) + '%'; }
+  function fmtPctSigned(x, d) { if (!isNum(x)) return '—'; return '‎' + (x > 0 ? '+' : '') + fmt(x, d == null ? 1 : d) + '%'; }
+  function fmtCompact(x) {
+    if (!isNum(x)) return '—';
+    var a = Math.abs(x);
+    if (a >= 1e6) return (x / 1e6).toFixed(a >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M';
+    if (a >= 1e3) return (x / 1e3).toFixed(a >= 1e4 ? 0 : 1).replace(/\.0$/, '') + 'K';
+    return fmt(x, 0);
+  }
+  function fmtMoney(x, cur) {
+    if (!isNum(x)) return '—';
+    try { return new Intl.NumberFormat('he-IL', { style: 'currency', currency: cur || 'USD', maximumFractionDigits: 0 }).format(x); }
+    catch (e) { return fmt(x, 0); }
+  }
+  function fmtDate(iso) { if (!iso) return '—'; var p = iso.split('-'); return p.length === 3 ? (+p[2]) + '.' + (+p[1]) + '.' + p[0] : iso; }
+
+  /* Parse a number typed by a person: accepts "," or "." decimals, %, ₪, $, Unicode minus. NaN = invalid, null = empty. */
+  function parseNum(raw) {
+    if (raw == null) return null;
+    var s = String(raw).trim();
+    if (!s) return null;
+    s = s.replace(/[‎‏‪-‮\s%₪$]/g, '').replace(/[−–]/g, '-');
+    if (!s) return null;
+    if (s.indexOf(',') >= 0 && s.indexOf('.') >= 0) s = s.replace(/,/g, '');
+    else if (/^[-+]?\d{1,3}(,\d{3})+$/.test(s)) s = s.replace(/,/g, '');
+    else if (s.indexOf(',') >= 0) s = s.replace(',', '.');
+    if (!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(s)) return NaN;
+    return parseFloat(s);
+  }
+
+  /* =====================================================================
+     1. Safe storage (never throws; works when blocked by a sandbox)
+     ===================================================================== */
+  var STORAGE_KEY = 'qd-fusion:v1';
+  var Store = {
+    available: false, lastResult: null,
+    probe: function () {
+      try {
+        var k = '__qd_probe__';
+        window.localStorage.setItem(k, '1');
+        window.localStorage.removeItem(k);
+        this.available = true;
+      } catch (e) { this.available = false; }
+      return this.available;
+    },
+    load: function () {
+      if (!this.available) return null;
+      try { var raw = window.localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; }
+      catch (e) { return null; }
+    },
+    save: function (st) {
+      if (!this.available) { this.lastResult = 'unavailable'; return this.lastResult; }
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(st));
+        this.lastResult = 'ok';
+      } catch (e) {
+        try {
+          var slim = deepCopy(st);
+          if (slim.backtest) { slim.backtest.files = { prices: null, vix: null, scores: null }; slim.backtest.csvDropped = true; }
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
+          this.lastResult = 'partial';
+        } catch (e2) { this.lastResult = 'failed'; }
+      }
+      return this.lastResult;
+    }
+  };
+
+  /* =====================================================================
+     2. Model configuration
+     Each indicator is mapped linearly to 0–100: value at `from` = 0 points, value at `to` = 100 points (clamped).
+     ===================================================================== */
+  var IND = {
+    pe_current:    { label: 'מכפיל רווח צפוי (Forward P/E)', unit: 'x', scope: 'asset', neg: false, hint: 'מחיר חלקי רווח למניה צפוי ל-12 חודשים.' },
+    pe_median:     { label: 'חציון מכפיל רווח, 10 שנים', unit: 'x', scope: 'asset', neg: false, hint: 'החציון ההיסטורי של אותו מכפיל.' },
+    fcf_yield:     { label: 'תשואת תזרים חופשי (FCF Yield)', unit: '%', scope: 'asset', neg: true, hint: 'תזרים חופשי שנתי חלקי שווי שוק.' },
+    eps_growth:    { label: 'צמיחת EPS צפויה, 12 חודשים', unit: '%', scope: 'asset', neg: true, hint: 'צמיחת הרווח למניה שהאנליסטים צופים.' },
+    eps_rev3m:     { label: 'שינוי בתחזית ה-EPS ב-3 חודשים', unit: '%', scope: 'asset', neg: true, hint: 'כמה תחזית הרווח עודכנה למעלה או למטה.' },
+    drawdown:      { label: 'מרחק מהשיא של 52 שבועות', unit: '%', scope: 'asset', neg: true, hint: 'מספר שלילי, למשל ‎-25 לירידה של 25%.' },
+    eps_since_peak:{ label: 'שינוי בתחזית ה-EPS מאז שיא המחיר', unit: '%', scope: 'asset', neg: true, hint: 'אם המחיר ירד והתחזית כמעט לא זזה, הפחד לא מגובה ביסודות.' },
+    px_vs_200:     { label: 'מחיר מול ממוצע 200 יום', unit: '%', scope: 'asset', neg: true, hint: 'אחוז מעל (+) או מתחת (−) לממוצע הנע.' },
+    mom_3m:        { label: 'תשואת מחיר ב-3 חודשים', unit: '%', scope: 'asset', neg: true, hint: '' },
+    roic:          { label: 'תשואה על ההון המושקע (ROIC)', unit: '%', scope: 'asset', neg: true, hint: '' },
+    nd_ebitda:     { label: 'חוב נטו / EBITDA', unit: 'x', scope: 'asset', neg: true, hint: 'שלילי = מזומן נטו.' },
+    weight_pf:     { label: 'משקל הנכס בתיק', unit: '%', scope: 'asset', neg: false, hint: 'מחושב אוטומטית אם הסימול קיים בתיק איתמר 2040.' },
+    vix:           { label: 'מדד VIX', unit: '', scope: 'market', neg: false, hint: 'מדד התנודתיות של S&P 500.' },
+    hy_oas:        { label: 'מרווח אג"ח High Yield ‏(OAS)', unit: '%', scope: 'market', neg: false, hint: 'לדוגמה סדרת BAMLH0A0HYM2 ב-FRED.' },
+    hy_oas_chg:    { label: 'שינוי במרווח HY ב-3 חודשים', unit: 'נ"ב', scope: 'market', neg: true, hint: 'בנקודות בסיס. עלייה = הידוק אשראי.' },
+    curve:         { label: 'מרווח תשואות 10 שנים פחות 3 חודשים', unit: '%', scope: 'market', neg: true, hint: 'שלילי = עקום הפוך.' }
+  };
+  var DERIVED = {
+    pe_rel: { label: 'מכפיל נוכחי ביחס לחציון', unit: 'x', inputs: ['pe_current', 'pe_median'] }
+  };
+  var MARKET_KEYS = ['vix', 'hy_oas', 'hy_oas_chg', 'curve'];
+
+  var ENGINES = {
+    opp: {
+      name: 'QD Opportunity', title: 'מנוע הזדמנות', tone: 'opp',
+      components: [
+        { id: 'valuation', name: 'תמחור', w: 25, items: [{ src: 'pe_rel', from: 1.3, to: 0.7 }, { src: 'fcf_yield', from: 1, to: 7 }] },
+        { id: 'earnings', name: 'רווחים', w: 25, items: [{ src: 'eps_growth', from: -10, to: 20 }, { src: 'eps_rev3m', from: -5, to: 5 }] },
+        { id: 'divergence', name: 'פער פחד–יסודות', w: 20, kind: 'divergence', items: [
+          { src: 'drawdown', from: 0, to: -40, role: 'fear' }, { src: 'vix', from: 12, to: 40, role: 'fear' },
+          { src: 'eps_since_peak', from: -20, to: 0, role: 'fund' }] },
+        { id: 'trend', name: 'מגמה', w: 15, items: [{ src: 'px_vs_200', from: -15, to: 10 }, { src: 'mom_3m', from: -15, to: 10 }] },
+        { id: 'quality', name: 'איכות העסק', w: 15, items: [{ src: 'roic', from: 5, to: 25 }, { src: 'nd_ebitda', from: 4, to: 0 }] }
+      ]
+    },
+    risk: {
+      name: 'QD Risk', title: 'מנוע סיכון', tone: 'risk',
+      components: [
+        { id: 'credit', name: 'אשראי ונזילות', w: 25, items: [{ src: 'hy_oas', from: 3, to: 8 }, { src: 'hy_oas_chg', from: 0, to: 150 }] },
+        { id: 'earnDet', name: 'הידרדרות ברווחים', w: 25, items: [{ src: 'eps_rev3m', from: 3, to: -10 }, { src: 'eps_growth', from: 10, to: -15 }] },
+        { id: 'valRisk', name: 'סיכון תמחור', w: 15, items: [{ src: 'pe_rel', from: 0.9, to: 1.4 }, { src: 'fcf_yield', from: 6, to: 1 }] },
+        { id: 'tech', name: 'שבירה טכנית', w: 15, items: [{ src: 'px_vs_200', from: 5, to: -15 }, { src: 'mom_3m', from: 5, to: -20 }] },
+        { id: 'systemic', name: 'לחץ מערכתי', w: 15, items: [{ src: 'vix', from: 15, to: 40 }, { src: 'curve', from: 1, to: -1 }] },
+        { id: 'conc', name: 'ריכוזיות בתיק', w: 5, items: [{ src: 'weight_pf', from: 5, to: 25 }] }
+      ]
+    }
+  };
+  var ASSET_TYPES = { stock: 'מניה', etf: 'קרן סל (ETF)', commodity: 'סחורה (זהב, כסף)', index: 'מדד', other: 'אחר' };
+  var NA_PRESETS = { commodity: { opp: ['valuation', 'earnings', 'divergence', 'quality'], risk: ['earnDet', 'valRisk'] } };
+  var HOLDING_CLASSES = { us_eq: 'מניות ארה"ב', world_eq: 'מניות עולם', bonds: 'אג"ח', metals: 'מתכות יקרות', cash: 'מזומן', other: 'אחר' };
+
+  function labelOf(src) { return (IND[src] || DERIVED[src] || { label: src }).label; }
+  function unitOf(src) { return (IND[src] || DERIVED[src] || { unit: '' }).unit; }
+
+  /* =====================================================================
+     3. Scoring engines (pure functions)
+     ===================================================================== */
+  function mapLin(x, from, to) {
+    if (!isNum(x) || from === to) return null;
+    return clamp((x - from) / (to - from), 0, 1) * 100;
+  }
+
+  function scoreEngine(engKey, vals, na) {
+    var eng = ENGINES[engKey];
+    var naSet = (na && na[engKey]) || [];
+    var comps = [], warnings = [];
+    var wCovered = 0, wApplicable = 0, acc = 0, covered = 0, applicable = 0;
+
+    eng.components.forEach(function (c) {
+      var isNA = naSet.indexOf(c.id) >= 0;
+      var items = c.items.map(function (it) {
+        var v = vals[it.src];
+        var value = isNum(v) ? v : null;
+        var sc;
+        if (c.kind === 'divergence' && it.role === 'fund') sc = value == null ? null : clamp((value - it.from) / (it.to - it.from), 0, 1);
+        else sc = mapLin(value, it.from, it.to);
+        return { src: it.src, from: it.from, to: it.to, role: it.role || null, value: value, score: sc };
+      });
+      var score = null, status, note = '', missing = [];
+      if (isNA) {
+        status = 'na';
+      } else if (c.kind === 'divergence') {
+        var fear = items.filter(function (i) { return i.role === 'fear' && i.score != null; });
+        var fund = items.filter(function (i) { return i.role === 'fund'; })[0];
+        items.forEach(function (i) { if (i.value == null) missing.push(labelOf(i.src)); });
+        if (!fear.length || fund.score == null) {
+          status = 'missing';
+          var why = [];
+          if (!fear.length) why.push('מדד פחד (מרחק מהשיא או VIX)');
+          if (fund.score == null) why.push('שינוי בתחזית ה-EPS מאז השיא');
+          note = 'חסר: ' + why.join(' ו') + '. בלי שני הצדדים אי אפשר למדוד פער.';
+        } else {
+          var fearAvg = avg(fear.map(function (i) { return i.score; }));
+          score = fearAvg * fund.score;
+          status = fear.length < 2 ? 'partial' : 'ok';
+          note = 'עוצמת פחד ' + fmt(fearAvg, 0) + ' × מקדם יסודות ' + fmt(fund.score, 2) + ' = ' + fmt(score, 0);
+        }
+      } else {
+        var have = items.filter(function (i) { return i.score != null; });
+        items.forEach(function (i) { if (i.score == null) missing.push(labelOf(i.src)); });
+        if (!have.length) status = 'missing';
+        else { score = avg(have.map(function (i) { return i.score; })); status = have.length < items.length ? 'partial' : 'ok'; }
+      }
+      if (!isNA) {
+        wApplicable += c.w; applicable++;
+        if (score != null) { wCovered += c.w; acc += c.w * score; covered++; }
+      }
+      comps.push({ id: c.id, name: c.name, w: c.w, kind: c.kind || null, items: items, score: score, status: status, note: note, missing: missing });
+    });
+
+    var total = wCovered > 0 ? acc / wCovered : null;
+    comps.forEach(function (c) {
+      c.effW = (c.score != null && wCovered > 0) ? c.w / wCovered * 100 : 0;
+      c.contrib = c.score != null ? c.effW * c.score / 100 : 0;
+    });
+    var coverage = wApplicable > 0 ? wCovered / wApplicable : 0;
+    var reliable = total != null && coverage >= 0.6 && covered >= 2;
+
+    if (applicable === 0) warnings.push({ level: 'error', text: 'כל הרכיבים סומנו כלא רלוונטיים, ולכן אין ציון.' });
+    else if (total == null) warnings.push({ level: 'error', text: 'אין אף נתון למנוע הזה. הזן לפחות שני רכיבים כדי לקבל ציון.' });
+    else if (!reliable) {
+      warnings.push({ level: 'error', text: coverage < 0.6
+        ? 'כיסוי הנתונים ' + fmtPct(coverage * 100, 0) + ' בלבד (נדרש לפחות 60%). הציון מוצג, אבל אינו אמין.'
+        : 'הציון נשען על רכיב אחד בלבד ואינו אמין. הזן נתונים לרכיב נוסף.' });
+    }
+    comps.forEach(function (c) {
+      if (c.status === 'missing') warnings.push({ level: 'warn', text: 'רכיב "' + c.name + '" (' + c.w + '%) חסר נתונים ולא נכלל בציון. משקלו חולק בין הרכיבים האחרים.' });
+      else if (c.status === 'partial' && c.missing.length) warnings.push({ level: 'info', text: 'רכיב "' + c.name + '" מחושב חלקית. חסר: ' + c.missing.join(', ') + '.' });
+    });
+    return { key: engKey, score: total, coverage: coverage, covered: covered, applicable: applicable, reliable: reliable, components: comps, warnings: warnings };
+  }
+
+  function fusionDecision(o, r, th) {
+    th = th || { oppHi: 65, riskHi: 60 };
+    if (!o || !r || o.score == null || r.score == null) {
+      return { key: 'NA', tone: 'neutral', label: 'אין מספיק נתונים', text: 'כדי לקבל החלטה צריך ציון בשני המנועים.' };
+    }
+    if (!o.reliable || !r.reliable) {
+      return { key: 'LOW', tone: 'neutral', label: 'החלטה מושהית', text: 'כיסוי הנתונים נמוך באחד המנועים. השלם נתונים לפני שמסתמכים על האות.' };
+    }
+    var hiO = o.score >= th.oppHi, hiR = r.score >= th.riskHi;
+    if (hiO && !hiR) return { key: 'Q1', tone: 'good', label: 'קנייה מוגברת', text: 'הזדמנות גבוהה וסיכון מתון. אפשר להקדים או להגדיל קנייה מתוכננת.' };
+    if (hiO && hiR) return { key: 'Q2', tone: 'warn', label: 'קנייה מדורגת', text: 'הזדמנות גבוהה תחת לחץ בשוק. לקנות בחלקים ולא בבת אחת.' };
+    if (!hiO && hiR) return { key: 'Q3', tone: 'bad', label: 'מצב הגנה', text: 'סיכון גבוה בלי הזדמנות מספקת. לעצור תוספות ולבדוק את החשיפה.' };
+    return { key: 'Q4', tone: 'neutral', label: 'DCA רגיל', text: 'אין אות חריג. להמשיך בהפקדה החודשית הרגילה.' };
+  }
+
+  /* =====================================================================
+     4. Market and score data import (pure)
+        Prices, VIX and QD scores arrive in one CSV or in three. QD scores are joined
+        "as of" their availability date, never their observation date.
+     ===================================================================== */
+  var DAY = 86400000;
+  function detectDelimiter(line) {
+    var counts = { ',': 0, ';': 0, '\t': 0 }, inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (c === '"') inQ = !inQ;
+      else if (!inQ && counts.hasOwnProperty(c)) counts[c]++;
+    }
+    var best = ',', n = -1;
+    Object.keys(counts).forEach(function (k) { if (counts[k] > n) { n = counts[k]; best = k; } });
+    return best;
+  }
+  function splitCSV(text, delim) {
+    var rows = [], row = [], field = '', inQ = false, i = 0, L = text.length;
+    while (i < L) {
+      var c = text[i];
+      if (inQ) {
+        if (c === '"') { if (text[i + 1] === '"') { field += '"'; i += 2; continue; } inQ = false; i++; continue; }
+        field += c; i++; continue;
+      }
+      if (c === '"') { inQ = true; i++; continue; }
+      if (c === delim) { row.push(field); field = ''; i++; continue; }
+      if (c === '\r') { i++; continue; }
+      if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; i++; continue; }
+      field += c; i++;
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    return rows;
+  }
+  function normHeader(s) { return String(s || '').toLowerCase().replace(/[\s_\-."'()\[\]\/]/g, ''); }
+  var COLS = {
+    date: ['date', 'תאריך', 'datetime', 'time', 'day', 'יום', 'observationdate'],
+    open: ['open', 'פתיחה', 'שערפתיחה'],
+    close: ['close', 'price', 'last', 'value', 'מחיר', 'סגירה', 'שער', 'שערסגירה'],
+    adj: ['adjclose', 'adjustedclose', 'adjclosing', 'מחירמותאם'],
+    div: ['dividend', 'dividends', 'div', 'דיבידנד'],
+    split: ['split', 'splits', 'stocksplits', 'splitratio', 'ספליט', 'פיצול'],
+    vix: ['vix', 'vixcls', 'vixclose', 'ויקס'],
+    opp: ['opp', 'opportunity', 'qdopp', 'qdopportunity', 'הזדמנות'],
+    oppAvail: ['oppavailable', 'oppavailabledate', 'oppavail', 'oppavailability'],
+    oppCov: ['oppcoverage', 'oppcov'],
+    risk: ['risk', 'qdrisk', 'סיכון'],
+    riskAvail: ['riskavailable', 'riskavailabledate', 'riskavail', 'riskavailability'],
+    riskCov: ['riskcoverage', 'riskcov'],
+    avail: ['availabledate', 'available', 'availability'],
+    prov: ['provenance', 'scoresource', 'source', 'מקור']
+  };
+  function mapColumns(header) {
+    var normed = header.map(normHeader), map = {};
+    Object.keys(COLS).forEach(function (key) {
+      for (var a = 0; a < COLS[key].length; a++) {
+        var idx = normed.indexOf(COLS[key][a]);
+        if (idx >= 0) { map[key] = idx; break; }
+      }
+    });
+    return map;
+  }
+  function parseDateToken(s) {
+    s = String(s || '').trim();
+    if (!s) return null;
+    var m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);
+    if (m) return { y: +m[1], a: +m[2], b: +m[3], iso: true };
+    m = s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})(?!\d)/);
+    if (m) { var y = +m[3]; if (y < 100) y += y < 70 ? 2000 : 1900; return { y: y, a: +m[1], b: +m[2], iso: false }; }
+    m = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (m) return { y: +m[1], a: +m[2], b: +m[3], iso: true };
+    if (/[a-z]/i.test(s)) {
+      var tt = Date.parse(s + (/\d{1,2}:\d{2}/.test(s) ? '' : ' 12:00'));
+      if (isFinite(tt)) { var d = new Date(tt); return { y: d.getFullYear(), a: d.getMonth() + 1, b: d.getDate(), iso: true }; }
+    }
+    return null;
+  }
+  function makeUTC(y, mo, d) {
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    var t = Date.UTC(y, mo - 1, d), dt = new Date(t);
+    if (dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null;
+    return t;
+  }
+  function blankish(raw) { return raw == null || String(raw).trim() === '' || /^(na|n\/a|null|nan|\.|-)$/i.test(String(raw).trim()); }
+  function normProv(raw) {
+    var s = String(raw || '').trim().toLowerCase();
+    if (!s) return 'unknown';
+    if (/^(recorded|live|realtime|real-time|נרשם|תועד)/.test(s)) return 'recorded';
+    if (/^(reconstructed|backfill|backfilled|rebuilt|משוחזר|שוחזר)/.test(s)) return 'reconstructed';
+    if (/^(synthetic|simulated|סינתטי|מדומה)/.test(s)) return 'synthetic';
+    return 'unknown';
+  }
+
+  /* kind: 'prices' (required file), 'vix' or 'scores'. Never throws; reports errors, warnings and per-row issues. */
+  function parseTable(text, kind) {
+    kind = kind || 'prices';
+    var out = { kind: kind, rows: [], cols: {}, errors: [], warnings: [], issues: [], total: 0, skipped: 0, blank: 0, dupes: 0, dateOrder: null, delimiter: ',', frequency: null };
+    if (typeof text !== 'string' || !text.trim()) { out.errors.push('הקובץ ריק.'); return out; }
+    text = text.replace(/^﻿/, '');
+    var firstLine = text.split(/\r?\n/).filter(function (l) { return l.trim(); })[0] || '';
+    out.delimiter = detectDelimiter(firstLine);
+    var grid = splitCSV(text, out.delimiter).filter(function (r) { return r.some(function (c) { return String(c).trim() !== ''; }); });
+    if (grid.length < 2) { out.errors.push('נמצאה שורה אחת בלבד. צריך שורת כותרות ולפחות שורת נתונים אחת.'); return out; }
+    var header = grid[0], c = mapColumns(header);
+    if (kind === 'vix' && c.vix == null) { if (c.adj != null) c.vix = c.adj; else if (c.close != null) c.vix = c.close; }
+    var ok = kind === 'prices' ? (c.date != null && (c.close != null || c.adj != null))
+      : kind === 'vix' ? (c.date != null && c.vix != null) : (c.date != null && (c.opp != null || c.risk != null));
+    if (!ok) {
+      var want = kind === 'prices' ? 'date ו-close (או Adj Close)' : kind === 'vix' ? 'date ו-vix (או close)' : 'date ולפחות opp או risk';
+      out.errors.push('לא נמצאו עמודות חובה. שורת הכותרות צריכה לכלול ' + want + '. נמצא: ' +
+        header.map(function (h) { return '"' + String(h).trim() + '"'; }).join(', '));
+      return out;
+    }
+    Object.keys(c).forEach(function (k) { out.cols[k] = true; });
+    var body = grid.slice(1);
+    out.total = body.length;
+    var dateCols = ['date', 'oppAvail', 'riskAvail', 'avail'].filter(function (k) { return c[k] != null; });
+    var tok = body.map(function (r) {
+      var o = {};
+      dateCols.forEach(function (k) { o[k] = blankish(r[c[k]]) ? null : parseDateToken(r[c[k]]); });
+      return o;
+    });
+    var aOver = false, bOver = false, anyNonIso = false;
+    tok.forEach(function (o) { dateCols.forEach(function (k) { var p = o[k]; if (p && !p.iso) { anyNonIso = true; if (p.a > 12) aOver = true; if (p.b > 12) bOver = true; } }); });
+    if (!anyNonIso) out.dateOrder = 'iso';
+    else if (aOver && bOver) { out.errors.push('פורמט התאריכים בקובץ לא עקבי: חלק נראים כיום/חודש וחלק כחודש/יום.'); return out; }
+    else {
+      out.dateOrder = aOver ? 'dmy' : (bOver ? 'mdy' : 'dmy');
+      if (!aOver && !bOver) out.warnings.push('לא ניתן לקבוע אם התאריכים הם יום/חודש או חודש/יום. הונח יום/חודש (הפורמט הישראלי). בדוק את טווח התאריכים.');
+    }
+    function toT(p) {
+      if (!p) return null;
+      if (p.iso) return makeUTC(p.y, p.a, p.b);
+      return out.dateOrder === 'mdy' ? makeUTC(p.y, p.a, p.b) : makeUTC(p.y, p.b, p.a);
+    }
+    var seen = {};
+    body.forEach(function (r, i) {
+      var line = i + 2, o = tok[i];
+      var t = toT(o.date);
+      if (t == null) { out.issues.push('שורה ' + line + ': תאריך לא תקין "' + String(r[c.date] || '').trim() + '"'); return; }
+      function num(key, lo, hi, label) {
+        if (c[key] == null || blankish(r[c[key]])) return null;
+        var v = parseNum(r[c[key]]);
+        if (!isNum(v) || v < lo || v > hi) { out.issues.push('שורה ' + line + ': ' + label + ' לא תקין "' + String(r[c[key]]).trim() + '" (נשמר כחסר)'); return null; }
+        return v;
+      }
+      function dcol(key, label) {
+        if (c[key] == null || blankish(r[c[key]])) return null;
+        var tt = toT(o[key]);
+        if (tt == null) out.issues.push('שורה ' + line + ': ' + label + ' לא תקין "' + String(r[c[key]]).trim() + '" (נשמר כחסר)');
+        return tt;
+      }
+      function cov(key, label) { var v = num(key, 0, 100, label); return v == null ? null : (v > 1 ? v / 100 : v); }
+      var row = { t: t, ds: isoUTC(t) }, issuesBefore = out.issues.length;
+      if (kind === 'prices') {
+        row.close = num('close', 1e-9, 1e12, 'close');
+        row.adj = num('adj', 1e-9, 1e12, 'Adj Close');
+        row.open = num('open', 1e-9, 1e12, 'open');
+        row.div = num('div', 0, 1e9, 'dividend');
+        row.split = num('split', 0, 1e6, 'split');
+        if (row.split === 0) row.split = null;
+        row.vix = num('vix', 0, 200, 'vix');
+        if (row.close == null && row.adj == null) { if (out.issues.length === issuesBefore) out.issues.push('שורה ' + line + ': אין מחיר תקין'); return; }
+      } else if (kind === 'vix') {
+        if (blankish(r[c.vix])) { out.blank++; return; }
+        row.vix = num('vix', 0, 200, 'vix');
+        if (row.vix == null) return;
+      }
+      if (kind !== 'vix') {
+        row.opp = num('opp', 0, 100, 'opp');
+        row.risk = num('risk', 0, 100, 'risk');
+        var av = dcol('avail', 'available_date');
+        row.oppAvail = dcol('oppAvail', 'opp_available'); if (row.oppAvail == null) row.oppAvail = av;
+        row.riskAvail = dcol('riskAvail', 'risk_available'); if (row.riskAvail == null) row.riskAvail = av;
+        row.oppCov = cov('oppCov', 'opp_coverage');
+        row.riskCov = cov('riskCov', 'risk_coverage');
+        row.prov = c.prov != null ? normProv(r[c.prov]) : 'unknown';
+        if (kind === 'scores' && row.opp == null && row.risk == null) { out.issues.push('שורה ' + line + ': אין ציון'); return; }
+      }
+      if (seen[row.ds] != null) { out.rows[seen[row.ds]] = row; out.dupes++; return; }
+      seen[row.ds] = out.rows.length;
+      out.rows.push(row);
+    });
+    var descending = out.rows.length > 1 && out.rows[0].t > out.rows[out.rows.length - 1].t;
+    out.rows.sort(function (a, b) { return a.t - b.t; });
+    out.skipped = out.total - out.rows.length - out.dupes - out.blank;
+    if (descending) out.warnings.push('הקובץ היה ממוין מהחדש לישן. הנתונים מוינו מחדש לפי תאריך.');
+    if (out.dupes) out.warnings.push(out.dupes + ' תאריכים הופיעו פעמיים. נשמרה השורה האחרונה של כל תאריך.');
+    if (out.blank) out.warnings.push(out.blank + ' שורות בלי ערך (למשל ימי חג) דולגו.');
+    if (out.issues.length) out.warnings.push(out.issues.length + ' בעיות בשורות' + (out.skipped > 0 ? ', ' + out.skipped + ' שורות דולגו' : '') + '. הפירוט למטה.');
+    if (kind === 'prices' && out.rows.length < 2) out.errors.push('נשארו פחות משתי שורות מחיר תקינות.');
+    if (kind !== 'prices' && !out.rows.length) out.errors.push('לא נשארו שורות תקינות.');
+    if (kind === 'prices' && out.rows.length >= 2) {
+      var gaps = [];
+      for (var g = 1; g < out.rows.length; g++) gaps.push((out.rows[g].t - out.rows[g - 1].t) / DAY);
+      gaps.sort(function (a, b) { return a - b; });
+      var med = gaps[Math.floor(gaps.length / 2)];
+      out.frequency = med <= 4 ? 'יומי' : med <= 10 ? 'שבועי' : med <= 45 ? 'חודשי' : 'לא סדיר';
+    }
+    return out;
+  }
+  /* Compatibility name used by v1 tests. */
+  function parseBacktestCSV(text) { return parseTable(text, 'prices'); }
+
+  /* Join prices, VIX and scores into one point-in-time dataset.
+     opts.priceBasis: 'auto' | 'adjusted' | 'raw';  opts.assumedLagDays: explicit, labelled assumption for scores without availability dates. */
+  function buildDataset(parts, opts) {
+    opts = opts || {};
+    var P = parts.prices, V = parts.vix, S = parts.scores;
+    var ds = { bars: [], scores: { opp: [], risk: [] }, warnings: [], errors: [], meta: {} };
+    var meta = ds.meta;
+    if (!P || (P.errors && P.errors.length) || !P.rows || P.rows.length < 2) { ds.errors.push('אין קובץ מחירים תקין.'); return ds; }
+    var hasAdj = P.rows.some(function (r) { return r.adj != null; });
+    var basis = opts.priceBasis === 'raw' ? 'raw' : opts.priceBasis === 'adjusted' ? 'adjusted' : (hasAdj ? 'adjusted' : 'raw');
+    if (basis === 'adjusted' && !hasAdj) { ds.warnings.push('ביקשת מחירים מותאמים, אבל בקובץ אין עמודת Adj Close. נעשה שימוש במחיר הסגירה הגולמי.'); basis = 'raw'; }
+    meta.basis = basis; meta.divsApplied = 0; meta.divsIgnored = 0; meta.splitsApplied = 0; meta.splitsIgnored = 0; meta.openUnadjusted = 0;
+    var anyDiv = P.rows.some(function (r) { return r.div > 0; });
+    var anySplit = P.rows.some(function (r) { return r.split != null && r.split !== 1; });
+    if (basis === 'adjusted' && (anyDiv || anySplit)) ds.warnings.push('המחירים המותאמים כבר כוללים דיבידנדים וספליטים, ולכן עמודות הדיבידנד והספליט לא הופעלו (מניעת ספירה כפולה).');
+    if (basis === 'raw' && !P.rows.some(function (r) { return r.div != null; })) ds.warnings.push('מחירים גולמיים בלי עמודת דיבידנד: התוצאה היא תשואת מחיר בלבד, בלי דיבידנדים.');
+    var prevPx = null;
+    P.rows.forEach(function (r) {
+      var px = basis === 'adjusted' ? r.adj : r.close;
+      if (!isNum(px) || px <= 0) return;
+      var open = null;
+      if (isNum(r.open)) {
+        if (basis === 'raw') open = r.open;
+        else if (isNum(r.close) && r.close > 0) open = r.open * (r.adj / r.close);
+        else meta.openUnadjusted++;
+      }
+      var div = 0, split = 1;
+      if (basis === 'raw') {
+        if (r.div > 0) {
+          if (prevPx != null && r.div >= prevPx) { meta.divsIgnored++; ds.warnings.push('דיבידנד ב-' + fmtDate(r.ds) + ' גדול מהמחיר, ולכן לא הופעל.'); }
+          else { div = r.div; meta.divsApplied++; }
+        }
+        if (r.split != null && r.split !== 1) {
+          var rel = prevPx != null ? px / prevPx : null;
+          if (rel != null && Math.abs(Math.log(rel * r.split)) < Math.abs(Math.log(rel))) { split = r.split; meta.splitsApplied++; }
+          else { meta.splitsIgnored++; ds.warnings.push('ספליט ' + r.split + ' ב-' + fmtDate(r.ds) + ' לא הופעל: המחיר לא קפץ בהתאם, כנראה שהוא כבר מותאם לספליטים.'); }
+        }
+      } else {
+        if (r.div > 0) meta.divsIgnored++;
+        if (r.split != null && r.split !== 1) meta.splitsIgnored++;
+      }
+      ds.bars.push({ t: r.t, ds: r.ds, px: px, open: open, div: div, split: split, vix: null });
+      prevPx = px;
+    });
+    if (meta.openUnadjusted) ds.warnings.push('במחירים מותאמים אי אפשר להתאים את מחיר הפתיחה בלי עמודת close גולמית. בשורות האלה הביצוע יהיה בסגירה.');
+    if (ds.bars.length < 2) { ds.errors.push('אין מספיק שורות מחיר בבסיס המחיר שנבחר.'); return ds; }
+
+    meta.vixSource = 'none';
+    var priceVix = P.rows.some(function (r) { return r.vix != null; });
+    if (V && !(V.errors && V.errors.length) && V.rows && V.rows.length) {
+      meta.vixSource = 'file';
+      var j = 0, last = null;
+      ds.bars.forEach(function (b) {
+        while (j < V.rows.length && V.rows[j].t <= b.t) { last = V.rows[j]; j++; }
+        b.vix = last && (b.t - last.t) <= 5 * DAY ? last.vix : null;
+      });
+      if (priceVix) ds.warnings.push('ה-VIX נלקח מקובץ ה-VIX הנפרד, ולא מעמודת ה-vix שבקובץ המחירים.');
+    } else if (priceVix) {
+      meta.vixSource = 'prices';
+      var byDay = {};
+      P.rows.forEach(function (r) { byDay[r.ds] = r.vix; });
+      ds.bars.forEach(function (b) { b.vix = byDay[b.ds] != null ? byDay[b.ds] : null; });
+    }
+
+    var useFile = S && !(S.errors && S.errors.length) && S.rows && S.rows.length;
+    var src = useFile ? S.rows : P.rows;
+    meta.scoreSource = useFile ? 'file' : 'prices';
+    var lag = isNum(opts.assumedLagDays) && opts.assumedLagDays >= 0 ? opts.assumedLagDays : null;
+    meta.lagDays = lag;
+    ['opp', 'risk'].forEach(function (k) {
+      var list = [], noAvail = 0, assumed = 0, badAvail = 0, noCov = 0;
+      var prov = { recorded: 0, reconstructed: 0, synthetic: 0, unknown: 0 };
+      src.forEach(function (r) {
+        var v = r[k];
+        if (v == null) return;
+        var avail = r[k + 'Avail'];
+        if (avail == null) {
+          if (lag == null) { noAvail++; return; }
+          avail = r.t + lag * DAY; assumed++;
+        }
+        if (avail < r.t) { badAvail++; return; }
+        var cov = r[k + 'Cov'];
+        if (cov == null) noCov++;
+        var pv = r.prov || 'unknown';
+        prov[pv] = (prov[pv] || 0) + 1;
+        list.push({ obs: r.t, avail: avail, v: v, cov: cov == null ? null : cov, prov: pv });
+      });
+      list.sort(function (a, b) { return a.avail - b.avail || a.obs - b.obs; });
+      ds.scores[k] = list;
+      var total = list.length + noAvail + badAvail;
+      meta[k] = { rows: total, usable: list.length, noAvail: noAvail, assumed: assumed, badAvail: badAvail, noCov: noCov, prov: prov,
+        pit: total === 0 ? 'none' : list.length === 0 ? 'missing' : assumed ? 'assumed' : 'explicit' };
+      var name = k === 'opp' ? 'ההזדמנות' : 'הסיכון';
+      if (noAvail && list.length) ds.warnings.push(noAvail + ' שורות של ציון ' + name + ' בלי תאריך זמינות לא נכללו.');
+      if (badAvail) ds.warnings.push(badAvail + ' שורות של ציון ' + name + ' עם תאריך זמינות שקודם לתאריך התצפית לא נכללו.');
+      if (assumed) ds.warnings.push('לציון ' + name + ' הונחה זמינות של ' + lag + ' ימים אחרי התצפית. זו הנחה, לא נתון נקודתי.');
+      if (noCov && list.length) ds.warnings.push(noCov + ' שורות של ציון ' + name + ' בלי כיסוי נתונים. הן לא יפעילו קנייה.');
+    });
+    meta.marketProv = parts.synthetic ? 'synthetic' : 'imported';
+    meta.openShare = ds.bars.filter(function (b) { return isNum(b.open); }).length / ds.bars.length;
+    return ds;
+  }
+  /* v1-style row arrays (used by tests) → dataset. Fields: t, ds, close, open, div, split, vix, opp/oppAvail/oppCov, risk/riskAvail/riskCov, prov. */
+  function datasetFromRows(rows, p) {
+    function n(x) { return isNum(x) ? x : null; }
+    function cv(x) { return isNum(x) ? (x > 1 ? x / 100 : x) : null; }
+    var prices = { errors: [], rows: rows.map(function (r) {
+      return { t: r.t, ds: r.ds || isoUTC(r.t), close: r.close, adj: null, open: n(r.open), div: n(r.div), split: n(r.split), vix: n(r.vix),
+        opp: n(r.opp), oppAvail: n(r.oppAvail), oppCov: cv(r.oppCov), risk: n(r.risk), riskAvail: n(r.riskAvail), riskCov: cv(r.riskCov), prov: r.prov || 'unknown' };
+    }) };
+    if (!prices.rows.some(function (r) { return r.div != null; })) prices.rows.forEach(function (r) { r.div = 0; });
+    var ds = buildDataset({ prices: prices }, { priceBasis: 'raw', assumedLagDays: p && p.assumedLagDays });
+    ds.warnings = ds.warnings.filter(function (w) { return w.indexOf('תשואת מחיר בלבד') < 0; });
+    return ds;
+  }
+
+  /* =====================================================================
+     5. Backtest engine (pure)
+        Conventions (identical for every strategy):
+        - Contribution: credited at the close of the first bar of each calendar month.
+        - Decisions: at the close of bar t, using only data available at that close.
+        - Fills: at bar t+1 (its open if available and chosen, otherwise its close). Orders decided
+          on the last bar stay unfilled and are reported as open orders.
+        - Corporate actions (unadjusted prices only): splits then cash dividends at the start of the bar.
+        - Cash earns the cash yield daily (actual/365). Fees and slippage are performance costs.
+     ===================================================================== */
+  var STRATS = [
+    { key: 'dca', name: 'DCA חודשי', color: 'var(--s1)' },
+    { key: 'vix', name: 'טריגר VIX', color: 'var(--s2)' },
+    { key: 'opp', name: 'ציון הזדמנות בלבד', color: 'var(--s3)' },
+    { key: 'fusion', name: 'QD FUSION', color: 'var(--s4)' },
+    { key: 'fusion_vix', name: 'FUSION עם סיכון מקורב מ-VIX', color: 'var(--s5)' }
+  ];
+  var BT_DEFAULTS = {
+    monthly: 1000, vixTh: 25, oppTh: 65, riskTh: 60, riskVeto: 80, minCoverage: 60, maxScoreAgeDays: 120, maxWait: 6,
+    feePct: 0, feeMin: 0, slippageBps: 0, cashYield: 0, divTaxPct: 0, priceBasis: 'auto', execAt: 'open', vixProxy: false, assumedLagDays: null
+  };
+  var NUM_PARAMS = ['monthly', 'vixTh', 'oppTh', 'riskTh', 'riskVeto', 'minCoverage', 'maxScoreAgeDays', 'maxWait', 'feePct', 'feeMin', 'slippageBps', 'cashYield', 'divTaxPct'];
+  function btParams(p) {
+    var q = Object.assign({}, BT_DEFAULTS, p || {});
+    NUM_PARAMS.forEach(function (k) { if (!isNum(q[k])) q[k] = BT_DEFAULTS[k]; });
+    if (!isNum(q.assumedLagDays)) q.assumedLagDays = null;
+    q.vixProxy = q.vixProxy === true;
+    if (q.execAt !== 'close') q.execAt = 'open';
+    return q;
+  }
+  function riskProxyFromVix(v) { return isNum(v) ? mapLin(v, 15, 40) : null; }
+  function toPct(x) { return isNum(x) ? x * 100 : null; }
+  function sd(a) { if (a.length < 2) return null; var m = avg(a); return Math.sqrt(a.reduce(function (s, x) { return s + (x - m) * (x - m); }, 0) / (a.length - 1)); }
+
+  /* Latest score already available at each bar (max observation date among rows with avail <= bar time). */
+  function asOfSeries(list, bars) {
+    var out = new Array(bars.length), j = 0, best = null;
+    for (var i = 0; i < bars.length; i++) {
+      while (j < list.length && list[j].avail <= bars[i].t) { if (!best || list[j].obs >= best.obs) best = list[j]; j++; }
+      out[i] = best;
+    }
+    return out;
+  }
+  /* ok = may trigger a purchase. present = a fresh value exists (used by the safety veto even at low coverage). */
+  function scoreState(s, bar, p) {
+    if (!s) return { ok: false, present: false, why: 'missing' };
+    if ((bar.t - s.obs) / DAY > p.maxScoreAgeDays) return { ok: false, present: false, why: 'stale', v: s.v };
+    if (s.cov == null || s.cov * 100 < p.minCoverage) return { ok: false, present: true, why: 'coverage', v: s.v, cov: s.cov };
+    return { ok: true, present: true, v: s.v, cov: s.cov };
+  }
+  function strategyGate(key, ds, p) {
+    var m = ds.meta, hasVix = ds.bars.some(function (b) { return b.vix != null; });
+    function gate(k) {
+      var name = k === 'opp' ? 'opp (הזדמנות)' : 'risk (סיכון QD)';
+      var mm = m[k];
+      if (!mm || mm.pit === 'none') return 'אין בנתונים ציוני ' + name + '.';
+      if (mm.pit === 'missing') return 'לציוני ' + name + ' אין תאריך זמינות. בלי זמינות נקודתית אי אפשר לשלול הצצה לעתיד.';
+      if (mm.noCov >= mm.usable) return 'לציוני ' + name + ' אין כיסוי נתונים, ולכן אי אפשר לוודא שהם אמינים.';
+      return '';
+    }
+    if (key === 'dca') return '';
+    if (key === 'vix') return hasVix ? '' : 'אין נתוני VIX.';
+    if (key === 'opp') return gate('opp');
+    if (key === 'fusion') {
+      var g = gate('opp') || gate('risk');
+      if (g && !gate('opp') && hasVix) g += ' אפשר להפעיל במפורש אסטרטגיה נפרדת שמקרבת את הסיכון מ-VIX.';
+      return g;
+    }
+    if (key === 'fusion_vix') return !p.vixProxy ? 'לא הופעלה.' : (gate('opp') || (hasVix ? '' : 'אין נתוני VIX.'));
+    return '';
+  }
+  function decide(S, contribBar, month, b, opp, risk, p) {
+    var waitedOut = contribBar && p.maxWait > 0 && S.pending >= p.maxWait;
+    var all = S.cash, amt = 0, fb = false, why = '';
+    if (S.key === 'dca') { if (contribBar) { amt = all; why = 'dca'; } }
+    else if (S.key === 'vix') {
+      if (isNum(b.vix) && b.vix >= p.vixTh) { amt = all; why = 'signal'; }
+      else if (waitedOut) { amt = all; fb = true; why = 'wait'; }
+    } else if (S.key === 'opp') {
+      if (opp.ok && opp.v >= p.oppTh) { amt = all; why = 'signal'; }
+      else if (waitedOut) { amt = all; fb = true; why = 'wait'; }
+    } else {
+      if (risk.present && p.riskVeto > 0 && risk.v >= p.riskVeto) { S.vetoBars++; if (contribBar) S.vetoContribBars++; return; }
+      if (opp.ok && risk.ok) {
+        var hiO = opp.v >= p.oppTh, hiR = risk.v >= p.riskTh;
+        if (hiO && !hiR) { amt = all; why = 'Q1'; }
+        else if (hiO && hiR) { if (S.lastQ2 !== month) { amt = all * 0.5; S.lastQ2 = month; why = 'Q2'; } }
+        else if (!hiO && hiR) { if (waitedOut) { amt = all; fb = true; why = 'wait'; } }
+        else if (contribBar) { amt = Math.min(all, p.monthly); why = 'Q4'; }
+      } else if (contribBar) { amt = Math.min(all, p.monthly); why = 'baseline'; S.lowDataContribBars++; }
+    }
+    if (amt > 0.005) S.order = { amount: amt, fallback: fb, why: why };
+  }
+  function execOrder(S, b, i, p) {
+    var amt = Math.min(S.order.amount, S.cash);
+    if (amt <= 0.005) return;
+    var fee = Math.max(p.feeMin, amt * p.feePct / 100);
+    if (amt <= fee) { S.tinySkips++; return; }
+    var useOpen = p.execAt === 'open' && isNum(b.open) && b.open > 0;
+    if (p.execAt === 'open' && !useOpen) S.openFallback++;
+    var base = useOpen ? b.open : b.px, px = base * (1 + p.slippageBps / 10000), sh = (amt - fee) / px;
+    S.shares += sh; S.cash -= amt; S.spent += amt; S.fees += fee; S.slip += sh * (px - base); S.buys++;
+    if (S.order.fallback) S.fallbackBuys++;
+    S.pending = 0;
+    S.trades.push({ i: i, ds: b.ds, px: px, amount: amt, fee: fee, shares: sh, why: S.order.why });
+  }
+
+  function simulate(ds, params, opt) {
+    var p = btParams(params);
+    opt = opt || {};
+    var bars = ds.bars, i0 = opt.i0 || 0, i1 = opt.i1 != null ? opt.i1 : bars.length - 1;
+    if (!ds._oppAt) { ds._oppAt = asOfSeries(ds.scores.opp, bars); ds._riskAt = asOfSeries(ds.scores.risk, bars); }
+    var keys = opt.keys || STRATS.filter(function (s) { return s.key !== 'fusion_vix' || p.vixProxy; }).map(function (s) { return s.key; });
+    var cashRate = p.cashYield / 100, divTax = clamp(p.divTaxPct, 0, 100) / 100;
+    var res = STRATS.filter(function (s) { return keys.indexOf(s.key) >= 0; }).map(function (s) {
+      var why = strategyGate(s.key, ds, p);
+      return { key: s.key, name: s.name, color: s.color, enabled: !why, reason: why, proxy: s.key === 'fusion_vix',
+        cash: 0, shares: 0, contributed: 0, spent: 0, fees: 0, slip: 0, divs: 0, interest: 0, buys: 0, fallbackBuys: 0, tinySkips: 0, openFallback: 0,
+        pending: 0, lastQ2: null, order: null, vetoBars: 0, vetoContribBars: 0, lowDataContribBars: 0,
+        series: [], flows: [], trades: [], idx: 1, peak: 1, maxDD: 0, prevV: 0, cashShareSum: 0, valueSum: 0, nBars: 0, monthIdx: [] };
+    });
+    var prevMonth = null, prevT = null;
+    for (var i = i0; i <= i1; i++) {
+      var b = bars[i], month = b.ds.slice(0, 7), contribBar = month !== prevMonth;
+      var days = prevT == null ? 0 : (b.t - prevT) / DAY;
+      var lastOfMonth = i === i1 || bars[i + 1].ds.slice(0, 7) !== month;
+      var opp = scoreState(ds._oppAt[i], b, p), risk = scoreState(ds._riskAt[i], b, p);
+      var proxy = isNum(b.vix) ? { ok: true, present: true, v: riskProxyFromVix(b.vix), cov: 1 } : { ok: false, present: false, why: 'missing' };
+      for (var s = 0; s < res.length; s++) {
+        var S = res[s];
+        if (!S.enabled) continue;
+        if (cashRate && days > 0 && S.cash > 0) { var c0 = S.cash; S.cash *= Math.pow(1 + cashRate, days / 365); S.interest += S.cash - c0; }
+        if (b.split !== 1 && S.shares > 0) S.shares *= b.split;
+        if (b.div > 0 && S.shares > 0) { var dv = S.shares * b.div * (1 - divTax); S.cash += dv; S.divs += dv; }
+        if (S.order) { execOrder(S, b, i, p); S.order = null; }
+        var F = 0;
+        if (contribBar) { S.cash += p.monthly; S.contributed += p.monthly; S.pending += 1; S.flows.push({ t: b.t, a: -p.monthly }); F = p.monthly; }
+        var V = S.shares * b.px + S.cash;
+        if (S.prevV > 0) {
+          S.idx *= (V - F) / S.prevV;
+          if (S.idx > S.peak) S.peak = S.idx;
+          var dd = S.idx / S.peak - 1;
+          if (dd < S.maxDD) S.maxDD = dd;
+        }
+        S.prevV = V;
+        if (V > 0) { S.cashShareSum += S.cash / V; S.valueSum += V; S.nBars++; }
+        S.series.push({ t: b.t, v: V, c: S.contributed });
+        if (lastOfMonth) S.monthIdx.push({ m: month, idx: S.idx });
+        decide(S, contribBar, month, b, opp, S.proxy ? proxy : risk, p);
+      }
+      prevMonth = month; prevT = b.t;
+    }
+    var first = bars[i0], last = bars[i1], days = (last.t - first.t) / DAY, years = days / 365;
+    res.forEach(function (S) {
+      if (!S.enabled) return;
+      var fv = S.shares * last.px + S.cash;
+      var x = days >= 90 ? xirr(S.flows.concat([{ t: last.t, a: fv }])) : null;
+      var avgV = S.nBars ? S.valueSum / S.nBars : 0;
+      S.openOrder = S.order ? S.order.amount : 0;
+      S.order = null;
+      S.buyMarks = S.trades.map(function (tr) { return tr.i; });
+      S.metrics = {
+        finalValue: fv, contributed: S.contributed, profit: fv - S.contributed,
+        totalReturn: S.contributed > 0 ? (fv / S.contributed - 1) * 100 : null,
+        xirr: toPct(x), twr: (S.idx - 1) * 100,
+        twrCagr: days >= 365 ? (Math.pow(S.idx, 365 / days) - 1) * 100 : null,
+        maxDD: S.maxDD * 100, avgCashShare: S.nBars ? S.cashShareSum / S.nBars * 100 : null,
+        endCash: S.cash, openOrder: S.openOrder,
+        buys: S.buys, fallbackBuys: S.fallbackBuys, vetoBars: S.vetoBars, vetoContribBars: S.vetoContribBars, lowDataContribBars: S.lowDataContribBars,
+        turnover: (avgV > 0 && years > 0) ? S.spent / avgV / years * 100 : null,
+        fees: S.fees, slippage: S.slip, dividends: S.divs, interest: S.interest,
+        avgCost: S.shares > 0 ? S.spent / S.shares : null, tinySkips: S.tinySkips, openFallback: S.openFallback
+      };
+    });
+    var months = {};
+    for (var k = i0; k <= i1; k++) months[bars[k].ds.slice(0, 7)] = 1;
+    return { strategies: res, from: first.ds, to: last.ds, rows: i1 - i0 + 1, months: Object.keys(months).length, params: p, days: days, lastClose: last.px };
+  }
+
+  function runBacktest(input, params) {
+    var ds = Array.isArray(input) ? datasetFromRows(input, params) : input;
+    if (!ds || ds.errors.length) return { strategies: [], errors: ds ? ds.errors : ['אין נתונים'] };
+    var r = simulate(ds, params);
+    var dca = r.strategies.filter(function (s) { return s.key === 'dca' && s.enabled; })[0];
+    if (dca) r.strategies.forEach(function (S) { if (S.enabled && S !== dca) S.uncertainty = bootstrapExcess(S, dca, 2040); });
+    r.meta = ds.meta; r.warnings = ds.warnings;
+    return r;
+  }
+
+  /* Uncertainty: block bootstrap (6-month blocks, circular) of monthly TWR excess returns vs DCA. */
+  function monthlyReturns(S) {
+    var out = {}, prev = 1;
+    S.monthIdx.forEach(function (m) { out[m.m] = m.idx / prev - 1; prev = m.idx; });
+    return out;
+  }
+  function bootstrapExcess(S, D, seed, iters, block) {
+    iters = iters || 2000; block = block || 6;
+    var a = monthlyReturns(S), b = monthlyReturns(D), diff = [];
+    Object.keys(a).forEach(function (m) { if (m in b) diff.push(a[m] - b[m]); });
+    var n = diff.length;
+    if (n < 24) return { n: n, mean: n ? avg(diff) * 1200 : null, lo: null, hi: null, insufficient: true };
+    var rnd = mulberry32(seed || 1), means = [];
+    for (var k = 0; k < iters; k++) {
+      var sum = 0, cnt = 0;
+      while (cnt < n) {
+        var st = Math.floor(rnd() * n);
+        for (var j = 0; j < block && cnt < n; j++) { sum += diff[(st + j) % n]; cnt++; }
+      }
+      means.push(sum / n * 1200);
+    }
+    means.sort(function (x, y) { return x - y; });
+    return { n: n, mean: avg(diff) * 1200, lo: means[Math.floor(iters * 0.05)], hi: means[Math.floor(iters * 0.95)], insufficient: false };
+  }
+
+  /* XIRR: actual/365 day count (as in Excel). Returns null when undefined (no sign change or same-day flows). */
+  function xirr(flows) {
+    if (!flows || flows.length < 2) return null;
+    var hasNeg = false, hasPos = false, t0 = flows[0].t;
+    flows.forEach(function (f) { if (f.a < 0) hasNeg = true; if (f.a > 0) hasPos = true; if (f.t < t0) t0 = f.t; });
+    if (!hasNeg || !hasPos) return null;
+    function npv(r) {
+      var s = 0;
+      for (var i = 0; i < flows.length; i++) s += flows[i].a / Math.pow(1 + r, (flows[i].t - t0) / (365 * DAY));
+      return s;
+    }
+    var lo = -0.999999, hi = 1, flo = npv(lo), fhi = npv(hi), guard = 0;
+    while (isFinite(fhi) && flo * fhi > 0 && hi < 1e6 && guard++ < 60) { hi *= 2; fhi = npv(hi); }
+    if (!isFinite(flo) || !isFinite(fhi) || flo * fhi > 0) return null;
+    for (var k = 0; k < 400; k++) {
+      var mid = (lo + hi) / 2, fm = npv(mid);
+      if (fm === 0 || (hi - lo) < 1e-13 * Math.max(1, Math.abs(mid))) return mid;
+      if (flo * fm < 0) { hi = mid; fhi = fm; } else { lo = mid; flo = fm; }
+    }
+    return (lo + hi) / 2;
+  }
+
+  /* Scientific validation: parameter sensitivity and rolling walk-forward (out-of-sample). */
+  var GRID = { opp: [50, 55, 60, 65, 70, 75, 80], risk: [40, 50, 60, 70], vix: [20, 25, 30, 35, 40] };
+  function xirrOf(ds, p, key, i0, i1) {
+    var s = simulate(ds, p, { keys: [key], i0: i0, i1: i1 }).strategies[0];
+    return s && s.enabled ? s.metrics.xirr : null;
+  }
+  function sensitivity(ds, params) {
+    var p = btParams(params), dca = xirrOf(ds, p, 'dca');
+    var out = { dca: dca, grid: GRID, current: { oppTh: p.oppTh, riskTh: p.riskTh, vixTh: p.vixTh }, fusion: null, opp: null, vix: null };
+    function ex(x) { return x == null || dca == null ? null : x - dca; }
+    if (!strategyGate('fusion', ds, p)) out.fusion = GRID.opp.map(function (o) { return GRID.risk.map(function (r) { return ex(xirrOf(ds, Object.assign({}, p, { oppTh: o, riskTh: r }), 'fusion')); }); });
+    if (!strategyGate('opp', ds, p)) out.opp = GRID.opp.map(function (o) { return ex(xirrOf(ds, Object.assign({}, p, { oppTh: o }), 'opp')); });
+    if (!strategyGate('vix', ds, p)) out.vix = GRID.vix.map(function (v) { return ex(xirrOf(ds, Object.assign({}, p, { vixTh: v }), 'vix')); });
+    return out;
+  }
+  function monthStarts(bars) {
+    var out = [], prev = null;
+    bars.forEach(function (b, i) { var m = b.ds.slice(0, 7); if (m !== prev) { out.push(i); prev = m; } });
+    return out;
+  }
+  function walkForward(ds, params, o) {
+    var p = btParams(params);
+    o = Object.assign({ trainMonths: 36, testMonths: 12 }, o || {});
+    var ms = monthStarts(ds.bars), M = ms.length, folds = [];
+    var doF = !strategyGate('fusion', ds, p), doO = !strategyGate('opp', ds, p);
+    for (var k = 0; k + o.trainMonths + o.testMonths <= M; k += o.testMonths) {
+      var tr0 = ms[k], tr1 = ms[k + o.trainMonths] - 1, te0 = ms[k + o.trainMonths];
+      var te1 = k + o.trainMonths + o.testMonths < M ? ms[k + o.trainMonths + o.testMonths] - 1 : ds.bars.length - 1;
+      var dTr = xirrOf(ds, p, 'dca', tr0, tr1), dTe = xirrOf(ds, p, 'dca', te0, te1);
+      var f = { train: [ds.bars[tr0].ds, ds.bars[tr1].ds], test: [ds.bars[te0].ds, ds.bars[te1].ds], i: [tr0, tr1, te0, te1], dcaTest: dTe };
+      if (doF) {
+        var best = null;
+        GRID.opp.forEach(function (ov) {
+          GRID.risk.forEach(function (rv) {
+            var x = xirrOf(ds, Object.assign({}, p, { oppTh: ov, riskTh: rv }), 'fusion', tr0, tr1);
+            if (x != null && dTr != null && (!best || x - dTr > best.is)) best = { o: ov, r: rv, is: x - dTr };
+          });
+        });
+        if (best) {
+          var xt = xirrOf(ds, Object.assign({}, p, { oppTh: best.o, riskTh: best.r }), 'fusion', te0, te1);
+          f.fusion = { oppTh: best.o, riskTh: best.r, inSample: best.is, outSample: xt != null && dTe != null ? xt - dTe : null };
+        }
+      }
+      if (doO) {
+        var bo = null;
+        GRID.opp.forEach(function (ov) {
+          var x = xirrOf(ds, Object.assign({}, p, { oppTh: ov }), 'opp', tr0, tr1);
+          if (x != null && dTr != null && (!bo || x - dTr > bo.is)) bo = { o: ov, is: x - dTr };
+        });
+        if (bo) {
+          var xo = xirrOf(ds, Object.assign({}, p, { oppTh: bo.o }), 'opp', te0, te1);
+          f.opp = { oppTh: bo.o, inSample: bo.is, outSample: xo != null && dTe != null ? xo - dTe : null };
+        }
+      }
+      folds.push(f);
+    }
+    function agg(key) {
+      var xs = folds.map(function (f) { return f[key] && f[key].outSample; }).filter(isNum);
+      var is = folds.map(function (f) { return f[key] && f[key].inSample; }).filter(isNum);
+      return xs.length ? { n: xs.length, meanOOS: avg(xs), meanIS: avg(is), wins: xs.filter(function (x) { return x > 0; }).length, sd: sd(xs) } : null;
+    }
+    return { folds: folds, fusion: agg('fusion'), opp: agg('opp'), trainMonths: o.trainMonths, testMonths: o.testMonths, months: M };
+  }
+
+  /* Synthetic, clearly-labelled test data (seeded random walk with unadjusted prices, quarterly dividends,
+     one 2:1 split, VIX, and weekly QD scores with a 2-day availability lag). NOT historical. */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function makeSyntheticCSV(seed) {
+    var rnd = mulberry32(seed || 2040);
+    function gauss() { var u = 0, v = 0; while (u === 0) u = rnd(); while (v === 0) v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+    var crashes = [{ s: 380, len: 30, depth: -0.2 }, { s: 1290, len: 22, depth: -0.32 }, { s: 1980, len: 140, depth: -0.24 }];
+    var lines = ['date,open,close,dividend,split,vix,opp,opp_available,opp_coverage,risk,risk_available,risk_coverage,provenance'];
+    var p = 100, tr = 1, peak = 1, vixS = 14, hist = [], i = 0, factor = 1, splitAt = 1150;
+    var d = Date.UTC(2015, 0, 1), end = Date.UTC(2024, 11, 31);
+    while (d <= end) {
+      var wd = new Date(d).getUTCDay();
+      if (wd !== 0 && wd !== 6) {
+        var mu = 0.075 / 252, sig = 0.15 / Math.sqrt(252);
+        crashes.forEach(function (c) {
+          if (i >= c.s && i < c.s + c.len) { mu += c.depth / c.len; sig *= 2.1; }
+          else if (i >= c.s + c.len && i < c.s + c.len * 5) mu += (-c.depth * 0.7) / (c.len * 4);
+        });
+        var prev = p, ret = Math.exp(mu - sig * sig / 2 + sig * gauss());
+        var open = i === 0 ? p : prev * Math.exp(sig * 0.35 * gauss());
+        p = prev * ret; tr *= ret;
+        var div = 0;
+        if (i > 0 && i % 63 === 30) { div = p * 0.004; p -= div; }
+        var split = '';
+        if (i === splitAt) { factor = 2; split = '2'; }
+        peak = Math.max(peak, tr);
+        var dd = tr / peak - 1;
+        hist.push(p); if (hist.length > 200) hist.shift();
+        var trend = p / avg(hist) - 1;
+        vixS = vixS * 0.86 + (12.5 + 105 * Math.abs(dd) + 3 * Math.abs(gauss())) * 0.14;
+        var vix = clamp(vixS, 9, 85);
+        var cells = [isoUTC(d), (open / factor).toFixed(2), (p / factor).toFixed(2), div ? (div / factor).toFixed(4) : '', split, vix.toFixed(2)];
+        if (i % 5 === 0) {
+          var opp = clamp(28 + 150 * Math.abs(dd) + 5 * gauss() - (vix > 42 ? 8 : 0), 0, 100);
+          var risk = clamp(12 + 1.15 * (vix - 12) + (trend < -0.03 ? 14 : 0) + 4 * gauss(), 0, 100);
+          var av = isoUTC(d + 2 * DAY);
+          cells.push(opp.toFixed(1), av, (0.45 + 0.55 * rnd()).toFixed(2), risk.toFixed(1), av, (0.45 + 0.55 * rnd()).toFixed(2), 'synthetic');
+        } else cells.push('', '', '', '', '', '', '');
+        lines.push(cells.join(','));
+        i++;
+      }
+      d += DAY;
+    }
+    return lines.join('\n');
+  }
+
+  /* =====================================================================
+     6. Portfolio math (pure)
+     ===================================================================== */
+  function portfolioCalc(pf) {
+    var hs = (pf && pf.holdings) || [];
+    var total = 0, tSum = 0, valued = 0;
+    hs.forEach(function (h) { if (isNum(h.value) && h.value >= 0) { total += h.value; valued++; } if (isNum(h.target)) tSum += h.target; });
+    var rows = hs.map(function (h) {
+      var actual = total > 0 && isNum(h.value) ? h.value / total * 100 : null;
+      return { h: h, actual: actual, drift: (actual != null && isNum(h.target)) ? actual - h.target : null };
+    });
+    var maxRow = null;
+    rows.forEach(function (r) { if (r.actual != null && (!maxRow || r.actual > maxRow.actual)) maxRow = r; });
+    return { total: total, targetSum: tSum, rows: rows, count: hs.length, valued: valued, max: maxRow };
+  }
+  function contributionPlan(pf, amount) {
+    var c = portfolioCalc(pf);
+    if (!isNum(amount) || amount <= 0) return null;
+    var tgt = c.rows.filter(function (r) { return isNum(r.h.target) && r.h.target > 0; });
+    var tSum = tgt.reduce(function (s, r) { return s + r.h.target; }, 0);
+    if (!tgt.length || tSum <= 0) return null;
+    var newTotal = c.total + amount;
+    var defs = tgt.map(function (r) {
+      var desired = r.h.target / tSum * newTotal;
+      var cur = isNum(r.h.value) ? r.h.value : 0;
+      return { r: r, def: Math.max(0, desired - cur) };
+    });
+    var dSum = defs.reduce(function (s, d) { return s + d.def; }, 0);
+    var plan = defs.map(function (d) {
+      var buy;
+      if (dSum >= amount) buy = dSum > 0 ? amount * d.def / dSum : 0;
+      else buy = d.def + (amount - dSum) * d.r.h.target / tSum;
+      return { h: d.r.h, buy: buy };
+    });
+    return { plan: plan, normalized: Math.abs(tSum - 100) > 0.5, tSum: tSum };
+  }
+  function monthsUntil(iso) {
+    var now = new Date(), t = new Date(iso + 'T00:00:00');
+    if (!isFinite(t.getTime())) return null;
+    return Math.max(0, (t.getFullYear() - now.getFullYear()) * 12 + (t.getMonth() - now.getMonth()) - (t.getDate() < now.getDate() ? 1 : 0));
+  }
+  function projectFV(pv, pmt, annualPct, months) {
+    if (!isNum(annualPct) || !isNum(months)) return null;
+    pv = isNum(pv) ? pv : 0; pmt = isNum(pmt) ? pmt : 0;
+    var r = Math.pow(1 + annualPct / 100, 1 / 12) - 1;
+    var g = Math.pow(1 + r, months);
+    var fv = Math.abs(r) < 1e-12 ? pv + pmt * months : pv * g + pmt * (g - 1) / r;
+    return { fv: fv, paid: pv + pmt * months };
+  }
+
+  /* expose pure functions for tests */
+  window.QD = {
+    version: '2.0',
+    parseNum: parseNum, mapLin: mapLin, scoreEngine: scoreEngine, fusionDecision: fusionDecision,
+    parseTable: parseTable, parseBacktestCSV: parseBacktestCSV, buildDataset: buildDataset, runBacktest: runBacktest, simulate: simulate,
+    xirr: xirr, bootstrapExcess: bootstrapExcess, sensitivity: sensitivity, walkForward: walkForward, makeSyntheticCSV: makeSyntheticCSV,
+    portfolioCalc: portfolioCalc, contributionPlan: contributionPlan, projectFV: projectFV, ENGINES: ENGINES, IND: IND, BT_DEFAULTS: BT_DEFAULTS
+  };
+
+  /* =====================================================================
+     7. Application state
+     ===================================================================== */
+  function defaultState() {
+    return {
+      v: 1,
+      settings: { oppHi: 65, riskHi: 60 },
+      market: { vix: null, hy_oas: null, hy_oas_chg: null, curve: null }, marketAsOf: '',
+      assets: [], activeAssetId: null, seededDemo: false,
+      portfolio: { targetDate: '2040-01-01', currency: 'USD', monthly: null, assumedReturn: null, contribution: null, holdings: [] },
+      backtest: { params: Object.assign({}, BT_DEFAULTS), files: { prices: null, vix: null, scores: null }, synthetic: false },
+      scoreLog: [], marketUpdatedAt: ''
+    };
+  }
+  function mergeDefaults(def, src) {
+    if (src == null || typeof src !== 'object' || def == null || typeof def !== 'object' || Array.isArray(def)) return src == null ? def : src;
+    var out = {};
+    Object.keys(def).forEach(function (k) { out[k] = (k in src) ? mergeDefaults(def[k], src[k]) : def[k]; });
+    Object.keys(src).forEach(function (k) { if (!(k in out)) out[k] = src[k]; });
+    return out;
+  }
+  function makeDemoAsset() {
+    return {
+      id: uid(), name: 'נכס הדגמה', ticker: 'DEMO', type: 'stock', demo: true, asOf: '', na: { opp: [], risk: [] },
+      inputs: { pe_current: 18, pe_median: 21, fcf_yield: 4.5, eps_growth: 9, eps_rev3m: 1.2, drawdown: -22, eps_since_peak: -3,
+        px_vs_200: -6, mom_3m: -9, roic: 16, nd_ebitda: 1.1, weight_pf: null },
+      demoMarket: { vix: 27, hy_oas: 4.6, hy_oas_chg: 60, curve: 0.2 }
+    };
+  }
+
+  var state;
+  Store.probe();
+  (function initState() {
+    var loaded = Store.load();
+    state = loaded && loaded.v === 1 ? mergeDefaults(defaultState(), loaded) : defaultState();
+    if (!state.seededDemo) {
+      var demo = makeDemoAsset();
+      state.assets.unshift(demo);
+      state.activeAssetId = state.activeAssetId || demo.id;
+      state.seededDemo = true;
+    }
+    if (!activeAsset() && state.assets.length) state.activeAssetId = state.assets[0].id;
+    migrateState();
+  })();
+  /* v1 → v2: one combined CSV became three file slots; the score log is new. */
+  function migrateState() {
+    var b = state.backtest = state.backtest || {};
+    if (!b.files || typeof b.files !== 'object') b.files = { prices: null, vix: null, scores: null };
+    if (b.csvText) { b.files.prices = { name: b.csvName || 'קובץ CSV', text: b.csvText }; }
+    delete b.csvText; delete b.csvName;
+    b.params = Object.assign({}, BT_DEFAULTS, b.params || {});
+    if (!Array.isArray(state.scoreLog)) state.scoreLog = [];
+  }
+
+  var saveTimer = null;
+  function persist(now) {
+    clearTimeout(saveTimer);
+    if (now) { Store.save(state); updateStorageBadge(); return; }
+    saveTimer = setTimeout(function () { Store.save(state); updateStorageBadge(); }, 250);
+  }
+  window.addEventListener('pagehide', function () { persist(true); });
+  DOC.addEventListener('visibilitychange', function () { if (DOC.visibilityState === 'hidden') persist(true); });
+
+  function activeAsset() {
+    for (var i = 0; i < state.assets.length; i++) if (state.assets[i].id === state.activeAssetId) return state.assets[i];
+    return null;
+  }
+  function portfolioWeightFor(asset) {
+    if (!asset || !asset.ticker) return null;
+    var c = portfolioCalc(state.portfolio);
+    if (!(c.total > 0)) return null;
+    var tk = String(asset.ticker).trim().toUpperCase();
+    for (var i = 0; i < c.rows.length; i++) {
+      if (String(c.rows[i].h.ticker || '').trim().toUpperCase() === tk && c.rows[i].actual != null) return c.rows[i].actual;
+    }
+    return null;
+  }
+  function assetValues(asset) {
+    var m = asset.demo ? (asset.demoMarket || {}) : state.market;
+    var v = Object.assign({}, m, asset.inputs || {});
+    var w = portfolioWeightFor(asset);
+    if (w != null) v.weight_pf = w;
+    v.pe_rel = (isNum(v.pe_current) && isNum(v.pe_median) && v.pe_current > 0 && v.pe_median > 0) ? v.pe_current / v.pe_median : null;
+    return v;
+  }
+  /* Point-in-time score log: each entry is a score as it was known at the moment it was recorded. */
+  window.QD.logToCSV = function (rows) { return logToCSV(rows); };
+  function fmtStamp(iso) {
+    var d = new Date(iso);
+    if (!iso || !isFinite(d.getTime())) return '';
+    return d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  }
+  function stampText(iso) { return iso ? 'נכון לעדכון ב-' + fmtStamp(iso) : 'עוד לא הוזנו נתונים'; }
+  function logCountText(a) {
+    var rows = (state.scoreLog || []).filter(function (x) { return x.assetId === a.id; });
+    return rows.length ? 'תועדו ' + rows.length + ' ציונים לנכס הזה. האחרון: ' + fmtStamp(rows[rows.length - 1].recordedAt) + '.' : 'עדיין לא תועדו ציונים לנכס הזה.';
+  }
+  function recordScore(a) {
+    var S = scoreAsset(a);
+    if (S.o.score == null && S.r.score == null) return null;
+    var now = new Date();
+    var e = {
+      id: uid(), assetId: a.id, ticker: a.ticker || '', recordedAt: now.toISOString(), date: todayISO(),
+      opp: S.o.score, oppCov: S.o.coverage, oppReliable: S.o.reliable, risk: S.r.score, riskCov: S.r.coverage, riskReliable: S.r.reliable,
+      decision: S.d.key, observedDate: a.asOf || '', publishedDate: a.publishedDate || '', marketAsOf: a.demo ? '' : (state.marketAsOf || ''),
+      prov: a.demo ? 'synthetic' : 'recorded'
+    };
+    state.scoreLog.push(e);
+    if (state.scoreLog.length > 5000) state.scoreLog.splice(0, state.scoreLog.length - 5000);
+    return e;
+  }
+  /* Export in the "QD scores" file format of the point-in-time spec. A live record is available on the day it was recorded. */
+  function logToCSV(rows) {
+    var head = 'date,opp,opp_available,opp_coverage,risk,risk_available,risk_coverage,provenance,observed_date,published_date,market_as_of,recorded_at,ticker';
+    function n(x, d) { return isNum(x) ? x.toFixed(d) : ''; }
+    return [head].concat(rows.map(function (e) {
+      return [e.date, n(e.opp, 2), isNum(e.opp) ? e.date : '', n(e.oppCov, 3), n(e.risk, 2), isNum(e.risk) ? e.date : '', n(e.riskCov, 3), e.prov,
+        e.observedDate || '', e.publishedDate || '', e.marketAsOf || '', e.recordedAt, (e.ticker || '').replace(/[,"\n]/g, '')].join(',');
+    })).join('\n') + '\n';
+  }
+  function scoreAsset(asset) {
+    var vals = assetValues(asset);
+    var o = scoreEngine('opp', vals, asset.na), r = scoreEngine('risk', vals, asset.na);
+    return { asset: asset, vals: vals, o: o, r: r, d: fusionDecision(o, r, state.settings) };
+  }
+
+  /* =====================================================================
+     8. UI infrastructure: errors, toast, storage badge, router
+     ===================================================================== */
+  function showBanner(msg) {
+    var b = $('#banner');
+    if (!b) return;
+    $('#bannerText').textContent = msg;
+    b.hidden = false;
+  }
+  window.addEventListener('error', function (e) {
+    showBanner('אירעה שגיאה בקוד: ' + (e && e.message ? e.message : 'לא ידועה') + '. הנתונים השמורים לא נפגעו. נסה לרענן את הדף.');
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    showBanner('פעולה נכשלה: ' + (e && e.reason && e.reason.message ? e.reason.message : 'שגיאה לא ידועה') + '.');
+  });
+
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('#toast'); if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2400);
+  }
+
+  function updateStorageBadge() {
+    var b = $('#storageBadge'); if (!b) return;
+    var t = $('.t', b);
+    b.classList.remove('ok', 'bad');
+    if (!Store.available) { b.classList.add('bad'); t.textContent = 'לא נשמר במכשיר'; b.title = 'הדפדפן חוסם אחסון מקומי. הנתונים יימחקו כשתסגור את הדף.'; }
+    else if (Store.lastResult === 'failed') { b.classList.add('bad'); t.textContent = 'השמירה נכשלה'; }
+    else if (Store.lastResult === 'partial') { b.classList.add('ok'); t.textContent = 'נשמר (בלי קובץ CSV)'; }
+    else { b.classList.add('ok'); t.textContent = 'נשמר במכשיר'; b.title = 'הנתונים נשמרים רק בדפדפן הזה, במכשיר הזה.'; }
+  }
+
+  var VIEWS = ['dashboard', 'scoring', 'backtest', 'portfolio'];
+  var VIEW_TITLES = { dashboard: 'לוח בקרה', scoring: 'מנועי ציון', backtest: 'בדיקה היסטורית', portfolio: 'תיק איתמר 2040' };
+  var RENDER = {};
+  var currentView = null;
+
+  function viewFromHash() {
+    var h = '';
+    try { h = (window.location.hash || '').replace(/^#\/?/, ''); } catch (e) { h = ''; }
+    return VIEWS.indexOf(h) >= 0 ? h : 'dashboard';
+  }
+  function show(view, opts) {
+    if (VIEWS.indexOf(view) < 0) view = 'dashboard';
+    VIEWS.forEach(function (v) {
+      var sec = $('#view-' + v);
+      if (sec) sec.hidden = v !== view;
+    });
+    $$('[data-nav]').forEach(function (a) {
+      if (a.classList.contains('tab')) {
+        if (a.getAttribute('data-nav') === view) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      }
+    });
+    currentView = view;
+    try { DOC.title = VIEW_TITLES[view] + ' · QD FUSION'; } catch (e) { /* ignore */ }
+    renderView(view);
+    if (!opts || !opts.keepScroll) { try { window.scrollTo(0, 0); } catch (e) { /* ignore */ } }
+  }
+  function renderView(view) {
+    var sec = $('#view-' + view);
+    try { RENDER[view](sec); }
+    catch (err) {
+      sec.innerHTML = '<div class="card"><h2>המסך לא נטען</h2><p>' + esc(err && err.message ? err.message : String(err)) +
+        '</p><p class="muted small">שאר המסכים ממשיכים לעבוד, והנתונים השמורים לא נפגעו.</p></div>';
+      if (window.console) console.error(err);
+    }
+  }
+  function navigate(view) {
+    try {
+      if (window.history && window.history.pushState) window.history.pushState(null, '', '#' + view);
+      else window.location.hash = view;
+    } catch (e) {
+      try { window.location.hash = view; } catch (e2) { /* sandboxed: navigation still works below */ }
+    }
+    show(view);
+  }
+  DOC.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('[data-nav]') : null;
+    if (!a) return;
+    e.preventDefault();
+    var v = a.getAttribute('data-nav');
+    if (a.hasAttribute('data-asset')) { state.activeAssetId = a.getAttribute('data-asset'); persist(); }
+    navigate(v);
+  });
+  window.addEventListener('hashchange', function () { var v = viewFromHash(); if (v !== currentView) show(v); });
+  window.addEventListener('popstate', function () { var v = viewFromHash(); if (v !== currentView) show(v); });
+
+  /* hide the bottom tab bar while the on-screen keyboard is likely open (phones) */
+  DOC.addEventListener('focusin', function (e) {
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && e.target.type !== 'checkbox' && e.target.type !== 'file') DOC.body.classList.add('kb');
+  });
+  DOC.addEventListener('focusout', function () {
+    setTimeout(function () {
+      var a = DOC.activeElement;
+      if (!a || !/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) DOC.body.classList.remove('kb');
+    }, 60);
+  });
+  DOC.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-action="dismiss-banner"]') : null;
+    if (b) $('#banner').hidden = true;
+  });
+
+  /* two-step confirmation for destructive buttons (the preview frame blocks confirm()) */
+  function armOrRun(btn, run, armedText) {
+    if (btn.classList.contains('armed')) { btn.classList.remove('armed'); run(); return; }
+    var orig = btn.textContent;
+    btn.classList.add('armed'); btn.textContent = armedText || 'לחץ שוב לאישור';
+    setTimeout(function () { if (btn.isConnected && btn.classList.contains('armed')) { btn.classList.remove('armed'); btn.textContent = orig; } }, 5000);
+  }
+  function copyText(text, okMsg, fallbackEl) {
+    function fallback() {
+      if (fallbackEl) { fallbackEl.hidden = false; fallbackEl.value = text; fallbackEl.focus(); fallbackEl.select(); toast('סמן את הטקסט והעתק ידנית'); }
+      else toast('ההעתקה נחסמה בדפדפן הזה');
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { toast(okMsg || 'הועתק'); }, fallback);
+      } else fallback();
+    } catch (e) { fallback(); }
+  }
+  /* Inside claude.ai the page saves through the viewer's `downloads` capability; on a normal website, a blob link. */
+  var dlPromise = null;
+  function getDownloads() {
+    if (!dlPromise) {
+      dlPromise = new Promise(function (resolve) {
+        try {
+          if (window.claude && typeof window.claude.use === 'function') {
+            window.claude.use('downloads').then(function (d) { resolve(d || null); }, function () { resolve(null); });
+            return;
+          }
+        } catch (e) { /* ignore */ }
+        resolve(null);
+      });
+    }
+    return dlPromise;
+  }
+  function downloadText(text, filename, mime) {
+    var hasHost = false;
+    try { hasHost = !!(window.claude && typeof window.claude.use === 'function'); } catch (e) { hasHost = false; }
+    if (hasHost) {
+      getDownloads().then(function (d) {
+        if (!d) { blobDownload(text, filename, mime); return; }
+        d.save({ filename: filename, data: text }).then(function () { toast('הקובץ נשמר'); }, function (err) {
+          var c = err && err.code;
+          if (c === 'declined') toast('השמירה בוטלה');
+          else if (c === 'rate_limited') toast('חלון שמירה כבר פתוח. נסה שוב בעוד רגע.');
+          else toast('השמירה לא זמינה כאן. השתמש בכפתור ההעתקה.');
+        });
+      });
+      return;
+    }
+    blobDownload(text, filename, mime);
+  }
+  function blobDownload(text, filename, mime) {
+    try {
+      var blob = new Blob([text], { type: mime || 'text/plain' });
+      var url = URL.createObjectURL(blob);
+      var a = DOC.createElement('a');
+      a.href = url; a.download = filename; a.rel = 'noopener';
+      DOC.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 1500);
+      toast('ההורדה התחילה. אם לא קרה דבר, השתמש בכפתור ההעתקה.');
+    } catch (e) { toast('ההורדה נחסמה כאן. השתמש בכפתור ההעתקה.'); }
+  }
+  function readFile(file, cb) {
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { toast('הקובץ גדול מ-8MB'); return; }
+    var fr = new FileReader();
+    fr.onload = function () { cb(String(fr.result || ''), file.name); };
+    fr.onerror = function () { toast('קריאת הקובץ נכשלה'); };
+    fr.readAsText(file);
+  }
+
+  /* shared bits of markup */
+  var ICON = {
+    warn: '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2.5l8 14H2l8-14zm0 4.2a.9.9 0 0 0-.9.9v4a.9.9 0 1 0 1.8 0v-4a.9.9 0 0 0-.9-.9zm0 7.1a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>',
+    info: '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm0 6.6a.9.9 0 0 0-.9.9v4.4a.9.9 0 1 0 1.8 0V9.5a.9.9 0 0 0-.9-.9zm0-3.1a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>',
+    error: '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm-2.6 4.1L6.1 7.4 8.7 10l-2.6 2.6 1.3 1.3L10 11.3l2.6 2.6 1.3-1.3L11.3 10l2.6-2.6-1.3-1.3L10 8.7 7.4 6.1z"/></svg>',
+    good: '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm3.6 5.2L8.9 11.9 6.4 9.4 5.1 10.7l3.8 3.8 6-6-1.3-1.3z"/></svg>'
+  };
+  function noteHTML(level, html) {
+    var cls = level === 'error' ? 'error' : level === 'warn' ? 'warn' : level === 'good' ? 'good' : '';
+    return '<li class="note ' + cls + '">' + (ICON[level] || ICON.info) + '<span>' + html + '</span></li>';
+  }
+  function toneChip(d) {
+    var cls = d.tone === 'good' ? 'good' : d.tone === 'warn' ? 'warn' : d.tone === 'bad' ? 'bad' : '';
+    return '<span class="chip ' + cls + '">' + esc(d.label) + '</span>';
+  }
+  function numInput(id, value, opts) {
+    opts = opts || {};
+    var v = isNum(value) ? String(value) : '';
+    var attrs = 'id="' + id + '" class="input numeric" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="' + esc(v) + '"' +
+      (opts.key ? ' data-key="' + opts.key + '"' : '') + (opts.field ? ' data-field="' + opts.field + '"' : '') +
+      (opts.disabled ? ' disabled' : '') + (opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '') +
+      (opts.describedby ? ' aria-describedby="' + opts.describedby + '"' : '');
+    var html = '<div class="num-wrap"><input ' + attrs + '>';
+    if (opts.unit) html += '<span class="unit">' + esc(opts.unit) + '</span>';
+    if (opts.neg && !opts.disabled) html += '<button type="button" class="pm" data-action="flip-sign" data-for="' + id + '" aria-label="החלף סימן (פלוס/מינוס)">±</button>';
+    return html + '</div>';
+  }
+  function flipSign(input) {
+    var v = String(input.value || '').trim();
+    if (!v) v = '-';
+    else if (v.charAt(0) === '-' || v.charAt(0) === '−') v = v.slice(1);
+    else v = '-' + v;
+    input.value = v;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.focus();
+  }
+  DOC.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-action="flip-sign"]') : null;
+    if (!b) return;
+    var inp = DOC.getElementById(b.getAttribute('data-for'));
+    if (inp) flipSign(inp);
+  });
+
+  /* =====================================================================
+     9. Scoring view
+     ===================================================================== */
+  var openComps = {};
+  RENDER.scoring = function (sec) {
+    var a = activeAsset();
+    var opts = state.assets.map(function (x) {
+      return '<option value="' + esc(x.id) + '"' + (a && x.id === a.id ? ' selected' : '') + '>' + esc(x.name) + (x.ticker ? ' (' + esc(x.ticker) + ')' : '') + (x.demo ? ' · מדומה' : '') + '</option>';
+    }).join('');
+    var html = '<header class="view-head"><p class="eyebrow">QD OPPORTUNITY · QD RISK</p><h1 id="h-scoring">מנועי ציון</h1>' +
+      '<p class="lede">שני מנועים בלתי תלויים מדרגים כל נכס מ-0 עד 100. מזינים נתונים, והציון מתעדכן מיד. נתון חסר לא מוחלף בהשערה: הרכיב יוצא מהחישוב, ומוצגת אזהרה.</p></header>';
+    if (a) {
+      html += '<div class="score-strip" aria-live="polite">' +
+        '<div class="strip-cell"><div class="k">הזדמנות</div><div class="v opp" data-out="strip-opp">—</div></div>' +
+        '<div class="strip-cell"><div class="k">סיכון</div><div class="v risk" data-out="strip-risk">—</div></div>' +
+        '<div class="strip-cell"><div class="k">החלטת FUSION</div><div class="d" data-out="strip-dec">—</div></div></div>';
+    }
+    html += '<section class="card" aria-label="בחירת נכס"><div class="asset-bar">' +
+      '<div class="field"><label for="assetSelect">נכס</label>' +
+      (state.assets.length ? '<select id="assetSelect" class="select">' + opts + '</select>' : '<p class="muted">עדיין אין נכסים.</p>') + '</div>' +
+      '<div class="row"><button type="button" class="btn primary" data-action="show-add">הוסף נכס</button>' +
+      (a ? '<button type="button" class="btn danger" data-action="del-asset">מחק נכס</button>' : '') + '</div></div>' +
+      '<form id="addAssetForm" class="stack" hidden novalidate>' +
+      '<div class="form-grid"><div class="field"><label for="newName">שם</label><input id="newName" class="input" required maxlength="60" placeholder="לדוגמה: מיקרוסופט"></div>' +
+      '<div class="field"><label for="newTicker">סימול</label><input id="newTicker" class="input" maxlength="12" autocapitalize="characters" placeholder="MSFT" dir="ltr"></div>' +
+      '<div class="field"><label for="newType">סוג</label><select id="newType" class="select">' +
+      Object.keys(ASSET_TYPES).map(function (k) { return '<option value="' + k + '">' + ASSET_TYPES[k] + '</option>'; }).join('') + '</select></div></div>' +
+      '<p class="muted small">לסחורות (זהב, כסף) רכיבי רווחים ותמחור מסומנים מראש כלא רלוונטיים. אפשר לשנות זאת.</p>' +
+      '<div class="row"><button type="submit" class="btn primary">שמור נכס</button><button type="button" class="btn ghost" data-action="hide-add">ביטול</button></div></form>';
+    if (a) {
+      html += '<div class="asset-meta">' +
+        '<div class="field"><label for="metaName">שם הנכס</label><input id="metaName" class="input" maxlength="60" value="' + esc(a.name) + '" data-meta="name"></div>' +
+        '<div class="field"><label for="metaTicker">סימול</label><input id="metaTicker" class="input" maxlength="12" dir="ltr" autocapitalize="characters" value="' + esc(a.ticker || '') + '" data-meta="ticker"></div>' +
+        '<div class="field"><label for="metaType">סוג</label><select id="metaType" class="select" data-meta="type">' +
+        Object.keys(ASSET_TYPES).map(function (k) { return '<option value="' + k + '"' + (a.type === k ? ' selected' : '') + '>' + ASSET_TYPES[k] + '</option>'; }).join('') + '</select></div>' +
+        '<div class="field"><label for="metaAsOf">תאריך תצפית (סוף התקופה)</label><input id="metaAsOf" class="input" type="date" value="' + esc(a.asOf || '') + '" data-meta="asOf"></div>' +
+        '<div class="field"><label for="metaPub">תאריך פרסום הנתונים</label><input id="metaPub" class="input" type="date" value="' + esc(a.publishedDate || '') + '" data-meta="publishedDate"></div></div>' +
+        '<p class="muted small">זמינות: <span data-out="asset-stamp">' + stampText(a.updatedAt) + '</span>. נרשם אוטומטית בכל שינוי בנתוני הנכס.</p>';
+      if (a.demo) html += '<p class="sim-tag">נכס הדגמה: כל הערכים מדומים ואינם נתוני שוק</p>';
+    }
+    html += '</section>';
+
+    if (!a) {
+      html += '<div class="empty"><p>הוסף נכס כדי להתחיל לדרג.</p></div>';
+      sec.innerHTML = html; bindScoring(sec); return;
+    }
+
+    html += '<div class="grid-2">' + engineCardHTML('opp', a) + engineCardHTML('risk', a) + '</div>';
+
+    html += '<section class="card" aria-labelledby="h-fusion"><div class="card-head"><h2 id="h-fusion">החלטת QD FUSION</h2>' +
+      '<span class="muted small">ספים: הזדמנות ≥ ' + state.settings.oppHi + ', סיכון ≥ ' + state.settings.riskHi + '</span></div>' +
+      '<div class="fusion-grid"><div class="decision" data-out="decision"></div><div class="matrix-wrap" data-out="matrix"></div></div>' +
+      '<div class="row"><button type="button" class="btn" data-action="record-score">תעד את הציון הנוכחי</button><span class="muted small" data-out="log-count">' + logCountText(a) + '</span></div>' +
+      '<details class="more"><summary>יומן ציונים נקודתי</summary><div class="stack small">' +
+      '<p>כל תיעוד שומר את שני הציונים, את הכיסוי ואת חותמת הזמן של הרגע הזה. זו הדרך היחידה לצבור ציוני QD נקודתיים אמיתיים, שישמשו בעתיד לבדיקה היסטורית בלי הצצה לעתיד. הייצוא הוא קובץ "ציוני QD" לפי המפרט, עם provenance=recorded.</p>' +
+      '<div class="row"><button type="button" class="btn sm" data-action="copy-log">העתק CSV של הנכס</button><button type="button" class="btn sm" data-action="dl-log">הורד CSV</button></div>' +
+      '<textarea id="logOut" class="textarea" hidden readonly aria-label="יומן הציונים כ-CSV"></textarea></div></details>' +
+      '<p class="disclaimer">האות הוא תוצר של המודל ושל הנתונים שהזנת. הוא לא ייעוץ השקעות ולא מחליף בדיקה עצמאית.</p></section>';
+
+    html += marketCardHTML(a);
+    html += methodologyHTML();
+    sec.innerHTML = html;
+    bindScoring(sec);
+    refreshScoring();
+  };
+
+  function engineCardHTML(key, a) {
+    var eng = ENGINES[key];
+    var vals = assetValues(a);
+    var naSet = (a.na && a.na[key]) || [];
+    var html = '<article class="card engine ' + key + '" aria-labelledby="h-eng-' + key + '">' +
+      '<div class="engine-head"><div class="engine-title"><small>' + eng.name + '</small><h2 id="h-eng-' + key + '">' + eng.title + '</h2></div>' +
+      '<div><div class="big-score ' + key + '"><span data-out="score-' + key + '">—</span><span class="of"> /100</span></div>' +
+      '<div class="cov" data-out="cov-' + key + '"></div></div></div>' +
+      '<div class="gauge ' + key + '" data-out="gauge-' + key + '" aria-hidden="true"></div>' +
+      '<ul class="notes" data-out="warn-' + key + '"></ul>' +
+      '<div class="stack">';
+    eng.components.forEach(function (c) {
+      var cid = key + '-' + c.id, isNA = naSet.indexOf(c.id) >= 0;
+      var open = openComps[cid] ? ' open' : '';
+      html += '<details class="comp' + (isNA ? ' na' : '') + '" data-comp="' + cid + '"' + open + '>' +
+        '<summary><span><span class="cname">' + esc(c.name) + '</span> <span class="cw">' + c.w + '%</span> <span data-out="cstat-' + cid + '"></span></span>' +
+        '<span class="cs" data-out="cscore-' + cid + '">—</span></summary><div class="cbody">';
+      c.items.forEach(function (it, idx) {
+        var srcs = DERIVED[it.src] ? DERIVED[it.src].inputs : [it.src];
+        srcs.forEach(function (s) { html += indicatorFieldHTML(s, a, vals, isNA, key + '-' + c.id); });
+        html += '<div class="ind-out" data-out="ind-' + cid + '-' + idx + '"></div>';
+      });
+      if (c.kind === 'divergence') html += '<p class="muted small" data-out="cnote-' + cid + '"></p>';
+      html += '<label class="na-toggle"><input type="checkbox" data-na="' + key + ':' + c.id + '"' + (isNA ? ' checked' : '') + '> הרכיב לא רלוונטי לנכס הזה</label>';
+      html += '</div></details>';
+    });
+    html += '</div><details class="more"><summary>פירוק הציון לפי רכיבים</summary><div class="table-wrap breakdown" data-out="break-' + key + '"></div></details></article>';
+    return html;
+  }
+
+  function indicatorFieldHTML(src, a, vals, disabled, ctx) {
+    var meta = IND[src];
+    var id = 'in-' + ctx + '-' + src;
+    var auto = src === 'weight_pf' && portfolioWeightFor(a) != null;
+    var value = auto ? Math.round(portfolioWeightFor(a) * 10) / 10 : (meta.scope === 'market' ? (a.demo ? (a.demoMarket || {})[src] : state.market[src]) : (a.inputs || {})[src]);
+    var scope = meta.scope === 'market' ? '<span class="scope">' + (a.demo ? 'שוק · מדומה' : 'נתון שוק משותף') + '</span>' : '';
+    var hint = auto ? 'מחושב מתיק איתמר 2040.' : meta.hint;
+    return '<div class="ind"><div class="ind-top"><label for="' + id + '">' + esc(meta.label) + scope + '</label></div>' +
+      numInput(id, value, { key: src, unit: meta.unit, neg: meta.neg, disabled: disabled || auto, describedby: hint ? id + '-h' : null }) +
+      (hint ? '<div class="hint" id="' + id + '-h">' + esc(hint) + '</div>' : '') + '</div>';
+  }
+
+  function marketCardHTML(a) {
+    var m = a.demo ? (a.demoMarket || {}) : state.market;
+    var stale = !a.demo && state.marketAsOf ? daysBetweenISO(state.marketAsOf, todayISO()) : null;
+    var html = '<section class="card" aria-labelledby="h-market"><div class="card-head"><h2 id="h-market">נתוני שוק</h2>' +
+      (a.demo ? '<span class="chip demo">מדומים, לנכס ההדגמה בלבד</span>' : '<span class="chip info">משותפים לכל הנכסים</span>') + '</div>' +
+      '<p class="muted small">VIX, מרווחי אשראי ועקום התשואות משפיעים על כל הנכסים. הם מופיעים גם בתוך הרכיבים, וכל עדכון מסתנכרן בכל המקומות.</p>' +
+      '<div class="form-grid">';
+    MARKET_KEYS.forEach(function (k) {
+      var meta = IND[k], id = 'mk-' + k;
+      html += '<div class="field"><label for="' + id + '">' + esc(meta.label) + '</label>' + numInput(id, m[k], { key: k, unit: meta.unit, neg: meta.neg }) + '</div>';
+    });
+    if (!a.demo) {
+      html += '<div class="field"><label for="mkAsOf">תאריך תצפית של נתוני השוק</label><input id="mkAsOf" class="input" type="date" value="' + esc(state.marketAsOf || '') + '" data-market-asof="1"></div>';
+    }
+    html += '</div><p class="muted small">זמינות: <span data-out="market-stamp">' + stampText(a.demo ? a.updatedAt : state.marketUpdatedAt) + '</span>.</p>';
+    if (!a.demo) {
+      if (!state.marketAsOf) html += '<ul class="notes">' + noteHTML('warn', 'לא צוין תאריך לנתוני השוק. כדאי לציין אותו, כדי לדעת מתי הם התיישנו.') + '</ul>';
+      else if (stale != null && stale > 7) html += '<ul class="notes">' + noteHTML('warn', 'נתוני השוק עודכנו לפני ' + stale + ' ימים. עדכן אותם לפני שמסתמכים על הציון.') + '</ul>';
+    }
+    return html + '</section>';
+  }
+
+  function methodologyHTML() {
+    var rows = '';
+    ['opp', 'risk'].forEach(function (k) {
+      ENGINES[k].components.forEach(function (c) {
+        c.items.forEach(function (it, i) {
+          var u = unitOf(it.src);
+          var rng = c.kind === 'divergence' && it.role === 'fund'
+            ? 'מקדם 0 ב-' + fmt(it.from, 2) + u + ', מקדם 1 ב-' + fmt(it.to, 2) + u + ' ומעלה'
+            : '0 נק\' ב-' + LRM + fmt(it.from, 2) + u + ', ‏100 נק\' ב-' + LRM + fmt(it.to, 2) + u;
+          rows += '<tr><td>' + (i === 0 ? ENGINES[k].name : '') + '</td><td>' + (i === 0 ? esc(c.name) + ' <span class="muted">(' + c.w + '%)</span>' : '') +
+            '</td><td>' + esc(labelOf(it.src)) + '</td><td>' + rng + '</td></tr>';
+        });
+      });
+    });
+    return '<details class="card method"><summary>איך מחושב הציון</summary>' +
+      '<p>כל מדד מומר לציון 0–100 בקו ישר בין שני ספים, וחוצה אותם נחתך. ציון הרכיב הוא ממוצע המדדים שהוזנו. ציון המנוע הוא ממוצע משוקלל של הרכיבים שיש להם נתונים: משקל של רכיב חסר מחולק באופן יחסי בין השאר, והכיסוי מוצג ליד הציון. מתחת ל-60% כיסוי, או כשיש רכיב אחד בלבד, הציון מסומן כלא אמין והחלטת FUSION מושהית.</p>' +
+      '<p>ברכיב "פער פחד–יסודות", עוצמת הפחד (ממוצע של המרחק מהשיא ו-VIX) מוכפלת במקדם יסודות: ירידה במחיר בלי ירידה בתחזית הרווח מקבלת ציון גבוה, וירידה שמגובה בקריסת רווחים מקבלת ציון נמוך.</p>' +
+      '<p class="muted small">הספים הם הנחות עבודה של המודל, לא אמת מדעית. אפשר לשנות אותם בקוד, באובייקט ENGINES.</p>' +
+      '<div class="table-wrap"><table><thead><tr><th>מנוע</th><th>רכיב</th><th>מדד</th><th>מיפוי</th></tr></thead><tbody>' + rows + '</tbody></table></div></details>';
+  }
+
+  function bindScoring(sec) {
+    if (sec.__bound) return;
+    sec.__bound = true;
+    sec.addEventListener('input', function (e) {
+      var t = e.target;
+      var a = activeAsset();
+      if (!a) return;
+      if (t.hasAttribute('data-key')) {
+        var key = t.getAttribute('data-key');
+        var v = parseNum(t.value);
+        var invalid = isNum(v) ? false : (v !== null);
+        t.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+        var val = isNum(v) ? v : null;
+        var nowIso = new Date().toISOString();
+        if (IND[key].scope === 'market') {
+          if (a.demo) { a.demoMarket = a.demoMarket || {}; a.demoMarket[key] = val; a.updatedAt = nowIso; }
+          else { state.market[key] = val; state.marketUpdatedAt = nowIso; }
+          var ms = $('[data-out="market-stamp"]', sec); if (ms) ms.textContent = stampText(a.demo ? a.updatedAt : state.marketUpdatedAt);
+        } else { a.inputs = a.inputs || {}; a.inputs[key] = val; a.updatedAt = nowIso; }
+        var st = $('[data-out="asset-stamp"]', sec); if (st) st.textContent = stampText(a.updatedAt);
+        $$('[data-key="' + key + '"]', sec).forEach(function (o) { if (o !== t) { o.value = t.value; o.setAttribute('aria-invalid', invalid ? 'true' : 'false'); } });
+        persist(); refreshScoring();
+      } else if (t.hasAttribute('data-meta')) {
+        var f = t.getAttribute('data-meta');
+        a[f] = f === 'ticker' ? t.value.trim().toUpperCase() : t.value;
+        persist();
+        if (f === 'name' || f === 'ticker') {
+          var opt = $('#assetSelect option[value="' + a.id + '"]', sec);
+          if (opt) opt.textContent = a.name + (a.ticker ? ' (' + a.ticker + ')' : '') + (a.demo ? ' · מדומה' : '');
+        }
+      } else if (t.hasAttribute('data-market-asof')) {
+        state.marketAsOf = t.value; persist();
+      }
+    });
+    sec.addEventListener('change', function (e) {
+      var t = e.target, a = activeAsset();
+      if (t.id === 'assetSelect') { state.activeAssetId = t.value; persist(); RENDER.scoring(sec); return; }
+      if (t.hasAttribute('data-na') && a) {
+        var parts = t.getAttribute('data-na').split(':');
+        a.na = a.na || { opp: [], risk: [] }; a.na[parts[0]] = a.na[parts[0]] || [];
+        var list = a.na[parts[0]], i = list.indexOf(parts[1]);
+        if (t.checked && i < 0) list.push(parts[1]);
+        if (!t.checked && i >= 0) list.splice(i, 1);
+        openComps[parts[0] + '-' + parts[1]] = true;
+        persist(); RENDER.scoring(sec);
+        return;
+      }
+      if (t.getAttribute('data-meta') === 'type' && a) {
+        a.type = t.value; persist();
+      }
+      if ((t.getAttribute('data-meta') === 'ticker' || t.getAttribute('data-meta') === 'type') && a) RENDER.scoring(sec);
+    });
+    sec.addEventListener('toggle', function (e) {
+      var d = e.target;
+      if (d && d.hasAttribute && d.hasAttribute('data-comp')) openComps[d.getAttribute('data-comp')] = d.open;
+    }, true);
+    sec.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-action]') : null;
+      if (!b) return;
+      var act = b.getAttribute('data-action');
+      if (act === 'show-add') { var f = $('#addAssetForm', sec); f.hidden = false; $('#newName', sec).focus(); }
+      else if (act === 'hide-add') { $('#addAssetForm', sec).hidden = true; }
+      else if (act === 'record-score') {
+        var cur = activeAsset(); if (!cur) return;
+        var e1 = recordScore(cur);
+        if (!e1) { toast('אין ציון לתיעוד. הזן נתונים בשני המנועים.'); return; }
+        persist();
+        var lc = $('[data-out="log-count"]', sec); if (lc) lc.textContent = logCountText(cur);
+        toast(e1.oppReliable && e1.riskReliable ? 'הציון תועד' : 'הציון תועד, עם כיסוי נמוך');
+      }
+      else if (act === 'copy-log' || act === 'dl-log') {
+        var aa = activeAsset(); if (!aa) return;
+        var rows = state.scoreLog.filter(function (x) { return x.assetId === aa.id; });
+        if (!rows.length) { toast('אין עדיין ציונים מתועדים לנכס הזה'); return; }
+        var csv = logToCSV(rows), fname = 'qd-scores-' + (aa.ticker || 'asset') + '-' + todayISO() + '.csv';
+        if (act === 'copy-log') copyText(csv, 'היומן הועתק', $('#logOut', sec)); else downloadText(csv, fname, 'text/csv');
+      }
+      else if (act === 'del-asset') {
+        armOrRun(b, function () {
+          var a = activeAsset(); if (!a) return;
+          state.assets = state.assets.filter(function (x) { return x.id !== a.id; });
+          state.activeAssetId = state.assets.length ? state.assets[0].id : null;
+          persist(); RENDER.scoring(sec); toast('הנכס נמחק');
+        }, 'לחץ שוב כדי למחוק');
+      }
+    });
+    sec.addEventListener('submit', function (e) {
+      if (e.target.id !== 'addAssetForm') return;
+      e.preventDefault();
+      var name = $('#newName', sec).value.trim();
+      if (!name) { $('#newName', sec).setAttribute('aria-invalid', 'true'); $('#newName', sec).focus(); toast('צריך לתת לנכס שם'); return; }
+      var type = $('#newType', sec).value;
+      var preset = NA_PRESETS[type] || { opp: [], risk: [] };
+      var asset = { id: uid(), name: name, ticker: $('#newTicker', sec).value.trim().toUpperCase(), type: type, demo: false, asOf: todayISO(),
+        na: { opp: preset.opp.slice(), risk: preset.risk.slice() }, inputs: {} };
+      state.assets.push(asset); state.activeAssetId = asset.id;
+      persist(); RENDER.scoring(sec); toast('הנכס נוסף');
+    });
+  }
+
+  function gaugeHTML(key, score) {
+    var th = key === 'opp' ? state.settings.oppHi : state.settings.riskHi;
+    var w = isNum(score) ? clamp(score, 0, 100) : 0;
+    return '<div class="track"><div class="fill" style="width:' + w + '%"></div></div>' +
+      '<div class="th" style="left:calc(' + th + '% - 1px)" title="סף ' + th + '"></div>' +
+      '<div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>';
+  }
+
+  function refreshScoring() {
+    var sec = $('#view-scoring'), a = activeAsset();
+    if (!sec || !a) return;
+    var S = scoreAsset(a);
+    function out(name) { return $('[data-out="' + name + '"]', sec); }
+    ['o', 'r'].forEach(function (k) {
+      var key = k === 'o' ? 'opp' : 'risk', res = S[k];
+      var el = out('score-' + key); if (el) el.textContent = res.score == null ? '—' : fmt(res.score, 0);
+      var cov = out('cov-' + key);
+      if (cov) cov.innerHTML = 'כיסוי נתונים ' + fmtPct(res.coverage * 100, 0) + (res.score != null && !res.reliable ? ' · <strong style="color:var(--risk)">לא אמין</strong>' : '');
+      var g = out('gauge-' + key); if (g) g.innerHTML = gaugeHTML(key, res.score);
+      var w = out('warn-' + key);
+      if (w) w.innerHTML = res.warnings.length ? res.warnings.map(function (x) { return noteHTML(x.level, esc(x.text)); }).join('') : noteHTML('good', 'כל הרכיבים מחושבים במלואם.');
+      res.components.forEach(function (c) {
+        var cid = key + '-' + c.id;
+        var cs = out('cscore-' + cid); if (cs) cs.textContent = c.status === 'na' ? 'לא רלוונטי' : (c.score == null ? '—' : fmt(c.score, 0));
+        var st = out('cstat-' + cid);
+        if (st) st.innerHTML = c.status === 'missing' ? '<span class="chip warn">חסר</span>' : c.status === 'partial' ? '<span class="chip info">חלקי</span>' : '';
+        c.items.forEach(function (it, idx) {
+          var o = out('ind-' + cid + '-' + idx);
+          if (!o) return;
+          if (c.status === 'na') { o.textContent = ''; return; }
+          var lbl = DERIVED[it.src] ? DERIVED[it.src].label + ': ' + (it.value == null ? '—' : fmt(it.value, 2) + 'x') + ' · ' : '';
+          if (c.kind === 'divergence' && it.role === 'fund') o.textContent = lbl + 'מקדם יסודות: ' + (it.score == null ? 'אין נתון' : fmt(it.score, 2));
+          else o.textContent = lbl + (it.score == null ? 'אין נתון, לא נכלל' : 'ציון מדד: ' + fmt(it.score, 0) + '/100');
+        });
+        var cn = out('cnote-' + cid); if (cn) cn.textContent = c.note;
+      });
+      var br = out('break-' + key);
+      if (br) {
+        br.innerHTML = '<table><thead><tr><th>רכיב</th><th class="num">משקל</th><th class="num">משקל בפועל</th><th class="num">ציון</th><th class="num">תרומה</th><th>מצב</th></tr></thead><tbody>' +
+          res.components.map(function (c) {
+            var stTxt = { ok: 'מלא', partial: 'חלקי', missing: 'חסר', na: 'לא רלוונטי' }[c.status];
+            return '<tr><td>' + esc(c.name) + '</td><td class="num">' + c.w + '%</td><td class="num">' + (c.effW ? fmt(c.effW, 1) + '%' : '—') +
+              '</td><td class="num">' + (c.score == null ? '—' : fmt(c.score, 0)) + '</td><td class="num">' + (c.score == null ? '—' : fmt(c.contrib, 1)) +
+              '</td><td>' + stTxt + '</td></tr>';
+          }).join('') + '</tbody></table>';
+      }
+    });
+    var so = out('strip-opp'); if (so) so.textContent = S.o.score == null ? '—' : fmt(S.o.score, 0) + (S.o.reliable ? '' : '*');
+    var sr = out('strip-risk'); if (sr) sr.textContent = S.r.score == null ? '—' : fmt(S.r.score, 0) + (S.r.reliable ? '' : '*');
+    var sd = out('strip-dec');
+    if (sd) { sd.textContent = S.d.label; sd.style.color = S.d.tone === 'good' ? 'var(--opp)' : S.d.tone === 'warn' ? 'var(--warn)' : S.d.tone === 'bad' ? 'var(--risk)' : 'var(--ink-2)'; }
+    var dec = out('decision');
+    if (dec) {
+      dec.className = 'decision ' + (S.d.tone || '');
+      dec.innerHTML = '<p class="muted small">' + esc(a.name) + (a.demo ? ' · ערכים מדומים' : '') + '</p><div class="decision-label">' + esc(S.d.label) + '</div><p>' + esc(S.d.text) + '</p>' +
+        '<div class="row"><span class="chip good">הזדמנות ' + (S.o.score == null ? '—' : fmt(S.o.score, 0)) + '</span><span class="chip bad">סיכון ' + (S.r.score == null ? '—' : fmt(S.r.score, 0)) + '</span></div>';
+    }
+    var mx = out('matrix');
+    if (mx) mx.innerHTML = matrixSVG([S], a.id);
+  }
+
+  /* Opportunity × Risk decision matrix (SVG). */
+  function matrixSVG(list, activeId) {
+    var W = 340, H = 320, L = 44, R = 12, T = 14, B = 44;
+    var pw = W - L - R, ph = H - T - B;
+    var oH = state.settings.oppHi, rH = state.settings.riskHi;
+    function x(v) { return L + v / 100 * pw; }
+    function y(v) { return T + (1 - v / 100) * ph; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="מטריצת החלטה: הזדמנות מול סיכון" direction="ltr" style="direction:ltr">';
+    s += '<rect x="' + L + '" y="' + T + '" width="' + pw + '" height="' + ph + '" fill="var(--surface-2)" rx="6"/>';
+    s += '<rect x="' + x(oH) + '" y="' + y(rH) + '" width="' + (x(100) - x(oH)) + '" height="' + (y(0) - y(rH)) + '" fill="var(--opp-soft)"/>';
+    s += '<rect x="' + x(oH) + '" y="' + T + '" width="' + (x(100) - x(oH)) + '" height="' + (y(rH) - T) + '" fill="var(--warn-soft)"/>';
+    s += '<rect x="' + L + '" y="' + T + '" width="' + (x(oH) - L) + '" height="' + (y(rH) - T) + '" fill="var(--risk-soft)"/>';
+    s += '<line x1="' + x(oH) + '" x2="' + x(oH) + '" y1="' + T + '" y2="' + (T + ph) + '" stroke="var(--axis)" stroke-dasharray="4 3"/>';
+    s += '<line x1="' + L + '" x2="' + (L + pw) + '" y1="' + y(rH) + '" y2="' + y(rH) + '" stroke="var(--axis)" stroke-dasharray="4 3"/>';
+    var qf = 'font-size="11" font-weight="700" font-family="IBM Plex Sans Hebrew, system-ui, sans-serif"';
+    s += '<text x="' + ((x(oH) + x(100)) / 2) + '" y="' + (y(0) - 8) + '" text-anchor="middle" fill="var(--opp)" ' + qf + '>קנייה מוגברת</text>';
+    s += '<text x="' + ((x(oH) + x(100)) / 2) + '" y="' + (T + 16) + '" text-anchor="middle" fill="var(--warn)" ' + qf + '>קנייה מדורגת</text>';
+    s += '<text x="' + ((L + x(oH)) / 2) + '" y="' + (T + 16) + '" text-anchor="middle" fill="var(--risk)" ' + qf + '>מצב הגנה</text>';
+    s += '<text x="' + ((L + x(oH)) / 2) + '" y="' + (y(0) - 8) + '" text-anchor="middle" fill="var(--ink-2)" ' + qf + '>DCA רגיל</text>';
+    [0, 25, 50, 75, 100].forEach(function (t) {
+      s += '<text x="' + x(t) + '" y="' + (T + ph + 16) + '" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="IBM Plex Mono, monospace">' + t + '</text>';
+      s += '<text x="' + (L - 6) + '" y="' + (y(t) + 3) + '" text-anchor="end" font-size="10" fill="var(--muted)" font-family="IBM Plex Mono, monospace">' + t + '</text>';
+    });
+    s += '<text x="' + (L + pw / 2) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="11" fill="var(--ink-2)" font-family="IBM Plex Sans Hebrew, system-ui, sans-serif">ציון הזדמנות</text>';
+    s += '<text transform="translate(12 ' + (T + ph / 2) + ') rotate(-90)" text-anchor="middle" font-size="11" fill="var(--ink-2)" font-family="IBM Plex Sans Hebrew, system-ui, sans-serif">ציון סיכון</text>';
+    list.forEach(function (S) {
+      if (S.o.score == null || S.r.score == null) return;
+      var cx = x(clamp(S.o.score, 0, 100)), cy = y(clamp(S.r.score, 0, 100));
+      var act = S.asset.id === activeId;
+      var fill = S.o.reliable && S.r.reliable ? 'var(--ink)' : 'var(--surface)';
+      s += '<g><title>' + esc(S.asset.name) + ': הזדמנות ' + fmt(S.o.score, 0) + ', סיכון ' + fmt(S.r.score, 0) + '</title>';
+      s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (act ? 7 : 5.5) + '" fill="' + fill + '" stroke="var(--surface)" stroke-width="2"/>';
+      if (!(S.o.reliable && S.r.reliable)) s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (act ? 7 : 5.5) + '" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="2 2"/>';
+      var lab = S.asset.ticker || S.asset.name;
+      var anchor = cx > W - 80 ? 'end' : 'start';
+      var lx = anchor === 'end' ? cx - 10 : cx + 10;
+      s += '<text x="' + lx + '" y="' + (cy + 4) + '" text-anchor="' + anchor + '" font-size="11" font-weight="600" fill="var(--ink)" font-family="IBM Plex Sans Hebrew, system-ui, sans-serif" paint-order="stroke" stroke="var(--surface-2)" stroke-width="3">' + esc(lab) + '</text></g>';
+    });
+    return s + '</svg>';
+  }
+
+  /* =====================================================================
+     10. Backtest view
+     ===================================================================== */
+  var BT = { parts: { prices: null, vix: null, scores: null }, ds: null, result: null, validation: null };
+  var SLOTS = [
+    { k: 'prices', label: 'מחירים', req: true, hint: 'date ו-close או Adj Close. רשות: open, dividend, split, vix ועמודות ציון.' },
+    { k: 'vix', label: 'VIX', req: false, hint: 'date ו-vix (או close). לדוגמה VIXCLS מ-FRED.' },
+    { k: 'scores', label: 'ציוני QD', req: false, hint: 'date, opp, opp_available, opp_coverage, risk, risk_available, risk_coverage, provenance.' }
+  ];
+  var TEMPLATES = {
+    prices: 'date,open,close,adj_close,dividend,split,vix\n',
+    vix: 'date,vix\n',
+    scores: 'date,opp,opp_available,opp_coverage,risk,risk_available,risk_coverage,provenance\n'
+  };
+  function btRebuild() {
+    var f = state.backtest.files || {};
+    BT.parts.prices = f.prices ? parseTable(f.prices.text, 'prices') : null;
+    BT.parts.vix = f.vix ? parseTable(f.vix.text, 'vix') : null;
+    BT.parts.scores = f.scores ? parseTable(f.scores.text, 'scores') : null;
+    BT.ds = BT.parts.prices && !BT.parts.prices.errors.length
+      ? buildDataset({ prices: BT.parts.prices, vix: BT.parts.vix, scores: BT.parts.scores, synthetic: !!state.backtest.synthetic }, state.backtest.params)
+      : null;
+    BT.result = null; BT.validation = null;
+  }
+  function btSetFile(slot, text, name, synthetic) {
+    state.backtest.files = state.backtest.files || { prices: null, vix: null, scores: null };
+    state.backtest.files[slot] = text == null ? null : { name: name || '', text: text };
+    if (slot === 'prices') state.backtest.synthetic = !!synthetic && text != null;
+    btRebuild();
+    persist();
+  }
+  try { btRebuild(); } catch (e) { BT.ds = null; }
+
+  RENDER.backtest = function (sec) {
+    var p = state.backtest.params;
+    var html = '<header class="view-head"><p class="eyebrow">BACKTEST</p><h1 id="h-backtest">בדיקה היסטורית</h1>' +
+      '<p class="lede">טוענים נתונים ומשווים ארבע שיטות קנייה עם אותה הפקדה חודשית ואותם כללי ביצוע. האפליקציה לא מורידה נתונים ולא מאמתת אותם. כל מספר בתוצאות נגזר מהקבצים שטענת, והתוצאות הן סימולציה.</p></header>';
+    html += dataCardHTML() + paramsCardHTML(p);
+    html += '<section class="card" aria-labelledby="h-bt-res"><h2 id="h-bt-res">תוצאות הסימולציה</h2><div id="btResults"></div></section>';
+    html += '<section class="card" aria-labelledby="h-bt-val"><h2 id="h-bt-val">תיקוף: רגישות ובדיקה מחוץ למדגם</h2>' +
+      '<p class="muted small">ניתוח הרגישות מריץ את האסטרטגיות על רשת של ספים סביב הערכים שבחרת. בדיקת ה-walk-forward בוחרת ספים על 36 חודשים, בודקת אותם על 12 החודשים שאחריהם, ומתגלגלת קדימה. כל חלון בדיקה מתחיל מאפס, עם אותה הפקדה ל-DCA ולאסטרטגיה.</p>' +
+      '<div class="row"><button type="button" class="btn" data-action="validate"' + (BT.ds && !BT.ds.errors.length ? '' : ' disabled') + '>הרץ תיקוף</button></div><div id="btValidation"></div></section>';
+    sec.innerHTML = html;
+    bindBacktest(sec);
+    runAndRenderBacktest();
+    if (BT.validation) renderValidation();
+  };
+
+  function dataCardHTML() {
+    var f = state.backtest.files || {};
+    var html = '<section class="card" aria-labelledby="h-bt-data"><h2 id="h-bt-data">נתונים</h2><div class="stack">';
+    SLOTS.forEach(function (s) {
+      var file = f[s.k], P = BT.parts[s.k];
+      html += '<div class="slot"><div class="slot-head"><span class="lbl">' + s.label + ' <span class="muted">(' + (s.req ? 'חובה' : 'רשות') + ')</span></span>' +
+        (file ? '<span class="chip ' + (P && P.errors.length ? 'bad' : 'info') + '">' + esc(file.name || 'טקסט') + '</span>' : '') + '</div>' +
+        '<p class="muted small">' + s.hint + '</p><div class="row">' +
+        '<label class="btn sm file-label">' + (file ? 'החלף קובץ' : 'בחר קובץ') + '<input type="file" data-slot="' + s.k + '" accept=".csv,text/csv,text/plain,.txt" aria-label="קובץ ' + s.label + '"></label>' +
+        (file ? '<button type="button" class="btn sm ghost" data-action="clear-slot" data-slot="' + s.k + '">הסר</button>' : '') + '</div>' +
+        (P ? fileIssuesHTML(P) : '') + '</div>';
+    });
+    html += '</div><div class="row"><button type="button" class="btn" data-action="synthetic">טען נתונים סינתטיים לבדיקה</button></div>' +
+      '<details class="more"><summary>הדבקת קובץ מחירים כטקסט</summary><div class="stack"><label class="sr-only" for="csvPaste">טקסט CSV</label>' +
+      '<textarea id="csvPaste" class="textarea" placeholder="date,close&#10;2020-01-02,100.5"></textarea>' +
+      '<div class="row"><button type="button" class="btn" data-action="paste-csv">טען טקסט</button></div></div></details>' +
+      '<details class="more"><summary>מבנה הקבצים ותבניות</summary><div class="stack small">' +
+      '<p>המפרט המלא נמצא ב-docs/POINT_IN_TIME_SPEC.md שבחבילת הקוד. העיקר: לכל ציון QD צריך תאריך זמינות (opp_available, risk_available), כלומר היום שבו הציון היה ידוע בפועל, וכיסוי נתונים (0–1). ציון בלי תאריך זמינות לא ישמש להחלטות.</p>' +
+      '<p>מחירים מותאמים (Adj Close) כבר כוללים דיבידנדים וספליטים, ולכן עמודות dividend ו-split מופעלות רק על מחירים גולמיים. במחירים של Yahoo, עמודת Close כבר מותאמת לספליטים: אל תוסיף לה עמודת split.</p>' +
+      SLOTS.map(function (s) {
+        return '<div class="stack"><span class="lbl">' + s.label + '</span><pre class="textarea" style="min-height:0;margin:0">' + esc(TEMPLATES[s.k].trim()) + '</pre>' +
+          '<div class="row"><button type="button" class="btn sm" data-action="copy-tpl" data-slot="' + s.k + '">העתק</button><button type="button" class="btn sm" data-action="dl-tpl" data-slot="' + s.k + '">הורד</button></div></div>';
+      }).join('') + '</div></details>';
+    if (BT.ds) html += datasetSummaryHTML(BT.ds);
+    return html + '</section>';
+  }
+  function kpi(k, v, s) { return '<div class="kpi"><span class="k">' + k + '</span><span class="v">' + v + '</span>' + (s ? '<span class="s">' + s + '</span>' : '') + '</div>'; }
+  function fileIssuesHTML(P) {
+    if (P.errors.length) return '<ul class="notes">' + P.errors.map(function (e) { return noteHTML('error', esc(e)); }).join('') + '</ul>';
+    var h = '';
+    if (P.warnings.length) h += '<ul class="notes">' + P.warnings.map(function (w) { return noteHTML('warn', esc(w)); }).join('') + '</ul>';
+    if (P.issues.length) {
+      h += '<details class="more"><summary>פירוט בעיות בשורות (' + P.issues.length + ')</summary><ul class="small" style="margin:0;padding-inline-start:20px">' +
+        P.issues.slice(0, 50).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + (P.issues.length > 50 ? '<li>ועוד ' + (P.issues.length - 50) + '…</li>' : '') + '</ul></details>';
+    }
+    return h;
+  }
+  function datasetSummaryHTML(ds) {
+    if (ds.errors.length) return '<ul class="notes">' + ds.errors.map(function (e) { return noteHTML('error', esc(e)); }).join('') + '</ul>';
+    var b = ds.bars, m = ds.meta, P = BT.parts.prices;
+    var basisSub = m.basis === 'adjusted' ? 'כולל דיבידנדים וספליטים' :
+      (m.divsApplied ? m.divsApplied + ' דיבידנדים' : 'בלי דיבידנדים') + (m.splitsApplied ? ' · ' + m.splitsApplied + ' ספליטים' : '');
+    var html = '<div class="kpis">' +
+      kpi('שורות מחיר', fmt(b.length, 0), P && P.frequency ? P.frequency : '') +
+      kpi('טווח', '<span class="data">' + fmtDate(b[0].ds) + '–' + fmtDate(b[b.length - 1].ds) + '</span>', monthStarts(b).length + ' חודשים') +
+      kpi('בסיס מחיר', m.basis === 'adjusted' ? 'מותאם' : 'גולמי', basisSub) +
+      kpi('VIX', m.vixSource === 'none' ? 'אין' : m.vixSource === 'file' ? 'קובץ נפרד' : 'בקובץ המחירים', m.openShare ? fmtPct(m.openShare * 100, 0) + ' עם מחיר פתיחה' : 'בלי מחיר פתיחה') + '</div>';
+    html += '<h3>מקור הנתונים</h3><ul class="notes">' + provenanceNotes(ds).join('') + '</ul>';
+    if (ds.warnings.length) html += '<ul class="notes">' + ds.warnings.map(function (w) { return noteHTML('warn', esc(w)); }).join('') + '</ul>';
+    return html;
+  }
+  function provenanceNotes(ds) {
+    var m = ds.meta, out = [];
+    out.push(m.marketProv === 'synthetic'
+      ? noteHTML('warn', '<b>נתוני שוק סינתטיים.</b> הסדרה נוצרה באקראי (זרע 2040), והיא לא מייצגת שום נכס או תקופה אמיתיים.')
+      : noteHTML('info', '<b>נתוני שוק מיובאים.</b> האפליקציה לא בודקת את המקור או את נכונות המספרים. ודא שהקובץ הגיע ממקור היסטורי אמין.'));
+    ['opp', 'risk'].forEach(function (k) {
+      var mm = m[k], name = k === 'opp' ? 'ציוני הזדמנות' : 'ציוני סיכון';
+      if (!mm || mm.pit === 'none') { out.push(noteHTML('info', '<b>' + name + ':</b> אין בנתונים.')); return; }
+      var pv = mm.prov, parts = [];
+      if (pv.recorded) parts.push(pv.recorded + ' נרשמו בזמן אמת');
+      if (pv.reconstructed) parts.push(pv.reconstructed + ' שוחזרו בדיעבד');
+      if (pv.synthetic) parts.push(pv.synthetic + ' סינתטיים');
+      if (pv.unknown) parts.push(pv.unknown + ' בלי מקור מוצהר');
+      var pit = mm.pit === 'explicit' ? 'עם תאריך זמינות מפורש' : mm.pit === 'assumed' ? 'זמינות מונחת (' + m.lagDays + ' ימים), לא נקודתית' : 'בלי תאריך זמינות, ולכן לא בשימוש';
+      var lvl = mm.pit === 'missing' ? 'error' : (mm.pit === 'assumed' || pv.reconstructed || pv.unknown) ? 'warn' : 'info';
+      out.push(noteHTML(lvl, '<b>' + name + ':</b> ' + fmt(mm.usable, 0) + ' שורות בשימוש, ' + pit + '. ' + (parts.length ? parts.join(', ') + '.' : '') +
+        (mm.noCov ? ' ' + mm.noCov + ' בלי כיסוי נתונים.' : '')));
+    });
+    return out;
+  }
+  function paramField(k, label, v, unit, hint) {
+    return '<div class="field"><label for="bt-' + k + '">' + label + '</label>' + numInput('bt-' + k, v, { field: k, unit: unit }) +
+      (hint ? '<div class="hint">' + hint + '</div>' : '') + '</div>';
+  }
+  function paramsCardHTML(p) {
+    function sel(k, label, opts) {
+      return '<div class="field"><label for="bt-' + k + '">' + label + '</label><select id="bt-' + k + '" class="select" data-field="' + k + '">' +
+        opts.map(function (o) { return '<option value="' + o[0] + '"' + (String(p[k]) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>';
+    }
+    return '<section class="card" aria-labelledby="h-bt-params"><h2 id="h-bt-params">פרמטרים</h2>' +
+      '<h3>הפקדה וביצוע</h3><div class="form-grid">' + paramField('monthly', 'הפקדה חודשית', p.monthly, '') +
+      sel('execAt', 'ביצוע אות', [['open', 'בפתיחת יום המסחר הבא'], ['close', 'בסגירת יום המסחר הבא']]) +
+      sel('priceBasis', 'בסיס מחיר', [['auto', 'אוטומטי'], ['adjusted', 'מותאם (Adj Close)'], ['raw', 'גולמי עם דיבידנדים וספליטים']]) + '</div>' +
+      '<h3>אותות</h3><div class="form-grid">' + paramField('vixTh', 'סף VIX', p.vixTh, '') + paramField('oppTh', 'סף הזדמנות', p.oppTh, '') +
+      paramField('riskTh', 'סף סיכון', p.riskTh, '') + paramField('riskVeto', 'וטו סיכון', p.riskVeto, '', '0 מבטל את הווטו') +
+      paramField('minCoverage', 'כיסוי נתונים מינימלי', p.minCoverage, '%') + paramField('maxScoreAgeDays', 'גיל ציון מרבי (ימים)', p.maxScoreAgeDays, '') +
+      paramField('maxWait', 'המתנה מרבית במזומן (חודשים)', p.maxWait, '', '0 מבטל את הכלל') + '</div>' +
+      '<h3>עלויות ותשואת מזומן</h3><div class="form-grid">' + paramField('feePct', 'עמלת קנייה', p.feePct, '%') + paramField('feeMin', 'עמלה מינימלית', p.feeMin, '') +
+      paramField('slippageBps', 'החלקה (נקודות בסיס)', p.slippageBps, '') + paramField('cashYield', 'ריבית שנתית על מזומן', p.cashYield, '%') +
+      paramField('divTaxPct', 'מס על דיבידנד', p.divTaxPct, '%') + '</div>' +
+      '<h3>חריגים מפורשים</h3>' +
+      '<label class="na-toggle"><input type="checkbox" data-field="vixProxy"' + (p.vixProxy ? ' checked' : '') + '> הוסף אסטרטגיה נפרדת: FUSION עם סיכון מקורב מ-VIX (לא ציון סיכון QD)</label>' +
+      '<div class="form-grid"><div class="field"><label for="bt-assumedLagDays">הנחת זמינות לציונים בלי תאריך זמינות (ימים)</label>' +
+      numInput('bt-assumedLagDays', p.assumedLagDays, { field: 'assumedLagDays', placeholder: 'ריק = לא להניח' }) +
+      '<div class="hint">ריק כברירת מחדל. מילוי השדה מסמן את כל התוצאות כ"זמינות מונחת".</div></div></div>' +
+      '<details class="more"><summary>כללי האסטרטגיות והביצוע</summary>' + rulesHTML() + '</details></section>';
+  }
+  function rulesHTML() {
+    return '<ul class="small" style="margin:0;padding-inline-start:20px">' +
+      '<li><b>זמנים:</b> ההחלטה מתקבלת בסגירת יום t, רק על סמך מידע שהיה זמין בסגירה הזאת. הביצוע ביום המסחר הבא, בפתיחה או בסגירה לפי הבחירה. הוראה שנוצרת ביום האחרון לא מתבצעת, והיא מוצגת כהוראה פתוחה.</li>' +
+      '<li><b>הפקדה:</b> בסגירת יום המסחר הראשון של כל חודש, זהה לכל האסטרטגיות.</li>' +
+      '<li><b>DCA:</b> קונה בכל המזומן אחרי כל הפקדה.</li>' +
+      '<li><b>טריגר VIX:</b> המזומן נצבר. כשה-VIX בסגירה גבוה מהסף או שווה לו, קונים בכל המזומן.</li>' +
+      '<li><b>הזדמנות בלבד:</b> כמו VIX, אבל האות הוא ציון הזדמנות שזמין, טרי (לא עבר את הגיל המרבי) ובכיסוי מספיק.</li>' +
+      '<li><b>QD FUSION:</b> וטו קודם לכול: כשציון הסיכון טרי וגבוה מסף הווטו או שווה לו, אין שום קנייה, גם לא אחרי המתנה מרבית. הווטו פועל גם על ציון בכיסוי נמוך, כי הוא בלם בטיחות. בלי וטו: הזדמנות גבוהה וסיכון נמוך: כל המזומן. הזדמנות גבוהה וסיכון גבוה: חצי מהמזומן, פעם בחודש. סיכון גבוה בלי הזדמנות: ממתינים. אחרת: ההפקדה החודשית בלבד. כשאין ציונים אמינים, קונים רק את ההפקדה החודשית, כמו DCA.</li>' +
+      '<li><b>FUSION עם סיכון מקורב:</b> מופיעה רק אם סימנת אותה, ובשם נפרד. הסיכון מחושב מה-VIX (15 = 0, ‏40 = 100) ולא מציון QD.</li>' +
+      '<li><b>המתנה מרבית:</b> אסטרטגיה שמחכה לאות קונה בכל זאת אחרי מספר ההפקדות הזה, אלא אם וטו פעיל.</li>' +
+      '<li><b>עלויות:</b> עמלה = הגבוה מבין אחוז העמלה והעמלה המינימלית. החלקה מעלה את מחיר הקנייה. עלות ממוצעת כוללת את שתיהן.</li>' +
+      '<li><b>אירועי חברה:</b> במחירים גולמיים, ספליט ואז דיבידנד בתחילת יום ה-ex. דיבידנד נכנס למזומן, אחרי מס אם הוגדר. במחירים מותאמים העמודות האלה לא מופעלות.</li>' +
+      '<li><b>מדדים:</b> TWR מחושב לפי (שווי בסוף היום פחות הפקדה) חלקי שווי אתמול, כך שהפקדות לא נספרות כתשואה, ועמלות כן. XIRR לפי ימים בפועל חלקי 365, כמו ב-Excel.</li></ul>';
+  }
+
+  function bindBacktest(sec) {
+    if (sec.__bound) return;
+    sec.__bound = true;
+    var timer = null;
+    function rerun(rebuild) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        if (rebuild) { btRebuild(); RENDER.backtest(sec); return; }
+        BT.validation = null;
+        var v = $('#btValidation'); if (v) v.innerHTML = '';
+        runAndRenderBacktest();
+      }, 250);
+    }
+    sec.addEventListener('change', function (e) {
+      var t = e.target, slot = t.getAttribute('data-slot');
+      if (slot && t.type === 'file') {
+        readFile(t.files && t.files[0], function (text, name) {
+          btSetFile(slot, text, name, false);
+          RENDER.backtest(sec);
+          var P = BT.parts[slot];
+          toast(P && P.errors.length ? 'הקובץ לא נטען. ראה פירוט.' : 'הקובץ נטען');
+        });
+        return;
+      }
+      var k = t.getAttribute('data-field');
+      if (k === 'execAt') { state.backtest.params.execAt = t.value; persist(); rerun(false); }
+      else if (k === 'priceBasis') { state.backtest.params.priceBasis = t.value; persist(); rerun(true); }
+      else if (k === 'vixProxy') { state.backtest.params.vixProxy = t.checked; persist(); rerun(false); }
+    });
+    sec.addEventListener('input', function (e) {
+      var t = e.target, k = t.getAttribute('data-field');
+      if (!k || (NUM_PARAMS.indexOf(k) < 0 && k !== 'assumedLagDays')) return;
+      var v = parseNum(t.value);
+      if (k === 'assumedLagDays') {
+        var okL = v === null || (isNum(v) && v >= 0 && v <= 3650);
+        t.setAttribute('aria-invalid', okL ? 'false' : 'true');
+        if (!okL) return;
+        state.backtest.params.assumedLagDays = v; persist(); rerun(true);
+        return;
+      }
+      var pctLike = ['oppTh', 'riskTh', 'riskVeto', 'minCoverage', 'divTaxPct'].indexOf(k) >= 0;
+      var ok = isNum(v) && v >= 0 && !(k === 'monthly' && v <= 0) && !(pctLike && v > 100) && !(k === 'feePct' && v >= 100) && !(k === 'slippageBps' && v > 1000);
+      t.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      if (!ok) return;
+      state.backtest.params[k] = v; persist(); rerun(false);
+    });
+    sec.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-action]') : null;
+      if (!b) return;
+      var act = b.getAttribute('data-action'), slot = b.getAttribute('data-slot');
+      if (act === 'synthetic') {
+        state.backtest.files = { prices: null, vix: null, scores: null };
+        btSetFile('prices', makeSyntheticCSV(2040), 'synthetic-2040.csv', true);
+        RENDER.backtest(sec); toast('נטענו נתונים סינתטיים');
+      } else if (act === 'clear-slot') { btSetFile(slot, null); RENDER.backtest(sec); }
+      else if (act === 'paste-csv') {
+        var txt = $('#csvPaste', sec).value;
+        if (!txt.trim()) { toast('אין טקסט להדבקה'); return; }
+        btSetFile('prices', txt, 'טקסט מודבק', false); RENDER.backtest(sec);
+      }
+      else if (act === 'copy-tpl') copyText(TEMPLATES[slot], 'התבנית הועתקה');
+      else if (act === 'dl-tpl') downloadText(TEMPLATES[slot], 'qd-fusion-' + slot + '-template.csv', 'text/csv');
+      else if (act === 'validate') runValidation();
+    });
+  }
+
+  function runAndRenderBacktest() {
+    var box = $('#btResults'); if (!box) return;
+    if (!BT.ds || BT.ds.errors.length) {
+      box.innerHTML = '<div class="empty"><p>אין עדיין תוצאות. טען קובץ מחירים, או טען נתונים סינתטיים כדי לראות איך הבדיקה עובדת.</p></div>';
+      return;
+    }
+    var res;
+    try { res = runBacktest(BT.ds, state.backtest.params); }
+    catch (err) { box.innerHTML = '<ul class="notes">' + noteHTML('error', 'החישוב נכשל: ' + esc(err.message)) + '</ul>'; return; }
+    BT.result = res;
+    var p = res.params, m = BT.ds.meta;
+    var on = res.strategies.filter(function (s) { return s.enabled; }), off = res.strategies.filter(function (s) { return !s.enabled; });
+    var html = '<ul class="notes">' + (m.marketProv === 'synthetic'
+      ? noteHTML('warn', '<b>סימולציה על נתונים סינתטיים.</b> הנתונים נוצרו באקראי כדי להדגים את המנגנון. אין להסיק מהם דבר על ביצועים.')
+      : noteHTML('info', '<b>סימולציה על נתונים מיובאים.</b> זו לא בדיקה היסטורית מאומתת: האפליקציה לא מאמתת את מקור הנתונים, והתוצאות לא נבדקו מול מקור עצמאי.'));
+    if ((m.opp && m.opp.pit === 'assumed') || (m.risk && m.risk.pit === 'assumed')) html += noteHTML('warn', 'זמינות הציונים מונחת ולא נקודתית. ייתכן שיש בתוצאות הצצה לעתיד.');
+    if ((m.opp && m.opp.prov.reconstructed) || (m.risk && m.risk.prov.reconstructed)) html += noteHTML('warn', 'חלק מהציונים שוחזרו בדיעבד. גם עם תאריכי זמינות, שחזור עלול לכלול מידע שלא היה ידוע אז, למשל דוחות מתוקנים.');
+    html += '</ul>';
+    html += '<p class="muted small">' + fmtDate(res.from) + ' עד ' + fmtDate(res.to) + ' · ' + res.months + ' הפקדות של ' + fmt(p.monthly, 0) +
+      ' · אות בסגירה, ביצוע ב' + (p.execAt === 'open' ? 'פתיחת' : 'סגירת') + ' יום המסחר הבא' + (p.execAt === 'open' && m.openShare < 1 ? ' (בימים בלי מחיר פתיחה: בסגירה)' : '') +
+      ' · בסיס מחיר ' + (m.basis === 'adjusted' ? 'מותאם' : 'גולמי') + '</p>';
+    if (!on.length) { box.innerHTML = html; return; }
+    html += '<div class="legend" aria-hidden="true">' + on.map(function (s) { return '<span><i class="sw" style="background:' + s.color + '"></i>' + esc(s.name) + '</span>'; }).join('') +
+      '<span><i class="sw dash"></i>סך ההפקדות</span></div><div class="chart" id="btChart"></div>';
+    function nameCell(s) { return '<td><span class="sw" style="background:' + s.color + '"></span> ' + esc(s.name) + (s.proxy ? ' <span class="chip warn">קירוב</span>' : '') + '</td>'; }
+    html += '<h3>תשואה וסיכון</h3><div class="table-wrap"><table><thead><tr><th>אסטרטגיה</th><th class="num">שווי סופי</th><th class="num">XIRR</th><th class="num">TWR שנתי</th>' +
+      '<th class="num">ירידה מרבית</th><th class="num">חשיפה ממוצעת למזומן</th><th class="num">מחזור שנתי</th></tr></thead><tbody>' +
+      on.map(function (s) {
+        var x = s.metrics;
+        return '<tr>' + nameCell(s) + '<td class="num data">' + fmt(x.finalValue, 0) + '</td><td class="num data">' + (x.xirr == null ? '—' : fmtPctSigned(x.xirr, 2)) +
+          '</td><td class="num data">' + (x.twrCagr == null ? '—' : fmtPctSigned(x.twrCagr, 2)) + '</td><td class="num data">' + fmtPct(x.maxDD, 1) +
+          '</td><td class="num data">' + fmtPct(x.avgCashShare, 0) + '</td><td class="num data">' + fmtPct(x.turnover, 0) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    html += '<h3>פעילות ועלויות</h3><div class="table-wrap"><table><thead><tr><th>אסטרטגיה</th><th class="num">קניות</th><th class="num">אחרי המתנה</th><th class="num">הפקדות תחת וטו</th>' +
+      '<th class="num">עלות ממוצעת</th><th class="num">עמלות והחלקה</th><th class="num">דיבידנד נטו</th><th class="num">ריבית</th><th class="num">מזומן בסוף</th><th class="num">הוראה פתוחה</th></tr></thead><tbody>' +
+      on.map(function (s) {
+        var x = s.metrics;
+        return '<tr>' + nameCell(s) + '<td class="num data">' + x.buys + '</td><td class="num data">' + x.fallbackBuys + '</td><td class="num data">' +
+          (s.key.indexOf('fusion') === 0 ? x.vetoContribBars : '—') + '</td><td class="num data">' + fmt(x.avgCost, 2) + '</td><td class="num data">' + fmt(x.fees + x.slippage, 0) +
+          '</td><td class="num data">' + fmt(x.dividends, 0) + '</td><td class="num data">' + fmt(x.interest, 0) + '</td><td class="num data">' + fmt(x.endCash, 0) +
+          '</td><td class="num data">' + fmt(x.openOrder, 0) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    var withU = on.filter(function (s) { return s.uncertainty; });
+    if (withU.length) {
+      html += '<h3>אי-ודאות מול DCA</h3><div class="table-wrap"><table><thead><tr><th>אסטרטגיה</th><th class="num">עודף שנתי ממוצע (TWR)</th><th class="num">טווח 90%</th><th>מסקנה</th></tr></thead><tbody>' +
+        withU.map(function (s) {
+          var u = s.uncertainty, verdict;
+          if (u.insufficient) verdict = '<span class="chip">פחות מ-24 חודשים</span>';
+          else if (u.lo > 0) verdict = '<span class="chip good">עדיפה על DCA</span>';
+          else if (u.hi < 0) verdict = '<span class="chip bad">נחותה מ-DCA</span>';
+          else verdict = '<span class="chip">לא ניתן להבחין מ-DCA</span>';
+          return '<tr>' + nameCell(s) + '<td class="num data">' + (u.mean == null ? '—' : fmtSigned(u.mean, 2)) + '</td><td class="num data">' +
+            (u.lo == null ? '—' : fmt(u.lo, 2) + ' עד ' + fmt(u.hi, 2)) + '</td><td>' + verdict + '</td></tr>';
+        }).join('') + '</tbody></table></div>' +
+        '<p class="muted small">ההפרש החודשי בתשואה משוקללת-זמן מול DCA, כפול 12, בנקודות אחוז לשנה. הטווח מבוסס על 2,000 דגימות bootstrap בבלוקים של 6 חודשים (זרע 2040). טווח שכולל את 0 פירושו שההבדל לא מובהק.</p>';
+    }
+    if (off.length) html += '<ul class="notes">' + off.map(function (s) { return noteHTML('info', '<b>' + esc(s.name) + ' לא פעילה:</b> ' + esc(s.reason)); }).join('') + '</ul>';
+    html += '<p class="muted small">סך ההפקדות זהה בכל האסטרטגיות: ' + fmt(on[0].metrics.contributed, 0) + '. מזומן שלא הושקע, כולל הוראה פתוחה, נספר בשווי הסופי. עלות ממוצעת כוללת עמלות והחלקה.</p>';
+    box.innerHTML = html;
+    drawBacktestChart($('#btChart'), on);
+  }
+
+  function runValidation() {
+    var box = $('#btValidation');
+    if (!box || !BT.ds || BT.ds.errors.length) return;
+    box.innerHTML = '<p class="muted">מחשב…</p>';
+    setTimeout(function () {
+      try {
+        var p = state.backtest.params;
+        BT.validation = { sens: sensitivity(BT.ds, p), wf: walkForward(BT.ds, p) };
+        renderValidation();
+      } catch (err) { box.innerHTML = '<ul class="notes">' + noteHTML('error', 'התיקוף נכשל: ' + esc(err.message)) + '</ul>'; }
+    }, 30);
+  }
+  function heatCell(v, maxAbs, cur) {
+    if (!isNum(v)) return '<td class="num data">—</td>';
+    var a = maxAbs > 0 ? Math.min(1, Math.abs(v) / maxAbs) : 0;
+    var col = v >= 0 ? 'var(--s1)' : 'var(--neg)';
+    return '<td class="num data heat' + (cur ? ' cur' : '') + '" style="background:color-mix(in srgb, ' + col + ' ' + Math.round(a * 50) + '%, var(--surface))">' + fmtSigned(v, 2) + '</td>';
+  }
+  function renderValidation() {
+    var box = $('#btValidation'), V = BT.validation;
+    if (!box || !V) return;
+    var s = V.sens, w = V.wf, html = '';
+    if (BT.ds.meta.marketProv === 'synthetic') html += '<ul class="notes">' + noteHTML('warn', 'התיקוף רץ על נתונים סינתטיים. הוא מדגים את השיטה, ולא אומר דבר על ביצועים אמיתיים.') + '</ul>';
+    html += '<h3>רגישות לספים</h3><p class="muted small">עודף XIRR מול DCA, בנקודות אחוז, על כל התקופה (DCA: ' + (s.dca == null ? '—' : fmtPct(s.dca, 2)) + '). התא המסומן הוא הבחירה הנוכחית. תוצאה טובה שמחזיקה רק בתא אחד, ולא בשכנים שלו, היא סימן להתאמת יתר.</p>';
+    var all = [];
+    if (s.fusion) s.fusion.forEach(function (r) { r.forEach(function (x) { if (isNum(x)) all.push(Math.abs(x)); }); });
+    if (s.opp) s.opp.forEach(function (x) { if (isNum(x)) all.push(Math.abs(x)); });
+    if (s.vix) s.vix.forEach(function (x) { if (isNum(x)) all.push(Math.abs(x)); });
+    var mx = all.length ? Math.max.apply(null, all) : 0;
+    if (s.fusion) {
+      html += '<p class="small"><b>QD FUSION</b>: שורות = סף הזדמנות, עמודות = סף סיכון.</p><div class="table-wrap"><table class="heatmap"><thead><tr><th>הזדמנות \\ סיכון</th>' +
+        s.grid.risk.map(function (r) { return '<th class="num">' + r + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        s.fusion.map(function (row, i) {
+          return '<tr><th class="num">' + s.grid.opp[i] + '</th>' + row.map(function (x, j) {
+            return heatCell(x, mx, s.grid.opp[i] === s.current.oppTh && s.grid.risk[j] === s.current.riskTh);
+          }).join('') + '</tr>';
+        }).join('') + '</tbody></table></div>';
+    } else html += '<ul class="notes">' + noteHTML('info', 'QD FUSION לא פעילה בנתונים האלה, ולכן אין עבורה רשת רגישות.') + '</ul>';
+    function oneRow(label, grid, vals, cur) {
+      return '<div class="table-wrap"><table class="heatmap"><thead><tr><th>' + label + '</th>' + grid.map(function (g) { return '<th class="num">' + g + '</th>'; }).join('') +
+        '</tr></thead><tbody><tr><th>עודף XIRR</th>' + vals.map(function (x, i) { return heatCell(x, mx, grid[i] === cur); }).join('') + '</tr></tbody></table></div>';
+    }
+    if (s.opp) html += oneRow('הזדמנות בלבד: סף', s.grid.opp, s.opp, s.current.oppTh);
+    if (s.vix) html += oneRow('טריגר VIX: סף', s.grid.vix, s.vix, s.current.vixTh);
+
+    html += '<h3>Walk-forward מחוץ למדגם</h3>';
+    if (!w.folds.length) {
+      html += '<ul class="notes">' + noteHTML('warn', 'צריך לפחות ' + (w.trainMonths + w.testMonths) + ' חודשים של נתונים. יש ' + w.months + '.') + '</ul>';
+    } else {
+      var notes = [];
+      [['fusion', 'QD FUSION'], ['opp', 'הזדמנות בלבד']].forEach(function (pair) {
+        var a = w[pair[0]];
+        if (!a) return;
+        var gap = a.meanIS - a.meanOOS;
+        notes.push(noteHTML(a.meanOOS > 0 && a.wins > a.n / 2 ? 'good' : 'warn', '<b>' + pair[1] + ':</b> עודף XIRR ממוצע מחוץ למדגם ' + fmtSigned(a.meanOOS, 2) +
+          ' נק\' (בתוך המדגם ' + fmtSigned(a.meanIS, 2) + '). עדיפה על DCA ב-' + a.wins + ' מתוך ' + a.n + ' חלונות.' +
+          (gap > 1 ? ' הפער בין בתוך המדגם למחוץ לו מצביע על התאמת יתר.' : '')));
+      });
+      if (notes.length) html += '<ul class="notes">' + notes.join('') + '</ul>';
+      html += '<div class="table-wrap"><table><thead><tr><th>חלון בדיקה</th><th class="num">FUSION: ספים</th><th class="num">בתוך המדגם</th><th class="num">מחוץ למדגם</th>' +
+        '<th class="num">הזדמנות: סף</th><th class="num">בתוך המדגם</th><th class="num">מחוץ למדגם</th></tr></thead><tbody>' +
+        w.folds.map(function (f) {
+          var F = f.fusion, O = f.opp;
+          return '<tr><td class="data">' + fmtDate(f.test[0]) + '–' + fmtDate(f.test[1]) + '</td>' +
+            '<td class="num data">' + (F ? F.oppTh + ' / ' + F.riskTh : '—') + '</td><td class="num data">' + (F ? fmtSigned(F.inSample, 2) : '—') + '</td><td class="num data">' + (F && isNum(F.outSample) ? fmtSigned(F.outSample, 2) : '—') + '</td>' +
+            '<td class="num data">' + (O ? O.oppTh : '—') + '</td><td class="num data">' + (O ? fmtSigned(O.inSample, 2) : '—') + '</td><td class="num data">' + (O && isNum(O.outSample) ? fmtSigned(O.outSample, 2) : '—') + '</td></tr>';
+        }).join('') + '</tbody></table></div><p class="muted small">ערכים: עודף XIRR מול DCA, בנקודות אחוז. הספים נבחרו בכל חלון אימון של ' + w.trainMonths + ' חודשים, והם מופעלים על ' + w.testMonths + ' החודשים שאחריו בלבד.</p>';
+    }
+    box.innerHTML = html;
+  }
+
+  /* Line chart: value over time per strategy + dashed contributions line. */
+  function niceStep(range, ticks) {
+    var raw = range / Math.max(1, ticks), mag = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / mag;
+    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * mag;
+  }
+  function drawBacktestChart(el, strategies) {
+    if (!el || !strategies.length) return;
+    var data = strategies.map(function (s) { return { name: s.name, color: s.color, pts: s.series }; });
+    var contrib = strategies[0].series.map(function (p) { return { t: p.t, v: p.c }; });
+    function draw() {
+      var W = Math.max(280, el.clientWidth || 600), H = W < 520 ? 240 : 300;
+      var L = 52, R = W < 520 ? 12 : 120, T = 12, B = 28;
+      var pw = W - L - R, ph = H - T - B;
+      var t0 = contrib[0].t, t1 = contrib[contrib.length - 1].t;
+      var vmax = 0;
+      data.forEach(function (d) { d.pts.forEach(function (p) { if (p.v > vmax) vmax = p.v; }); });
+      contrib.forEach(function (p) { if (p.v > vmax) vmax = p.v; });
+      var step = niceStep(vmax, 4), ymax = Math.ceil(vmax / step) * step || 1;
+      function x(t) { return L + (t1 === t0 ? 0 : (t - t0) / (t1 - t0) * pw); }
+      function y(v) { return T + (1 - v / ymax) * ph; }
+      var stride = Math.max(1, Math.floor(contrib.length / Math.max(200, pw)));
+      function path(pts) {
+        var s = '';
+        for (var i = 0; i < pts.length; i += stride) s += (s ? 'L' : 'M') + x(pts[i].t).toFixed(1) + ' ' + y(pts[i].v).toFixed(1);
+        var last = pts[pts.length - 1];
+        return s + 'L' + x(last.t).toFixed(1) + ' ' + y(last.v).toFixed(1);
+      }
+      var s = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="שווי התיק לאורך זמן לפי אסטרטגיה" style="direction:ltr">';
+      for (var v = 0; v <= ymax + 1e-9; v += step) {
+        s += '<line x1="' + L + '" x2="' + (L + pw) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="var(--grid)" stroke-width="1"/>';
+        s += '<text x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">' + fmtCompact(v) + '</text>';
+      }
+      var y0 = new Date(t0).getUTCFullYear(), y1 = new Date(t1).getUTCFullYear();
+      var every = Math.max(1, Math.ceil((y1 - y0 + 1) / Math.max(2, Math.floor(pw / 70))));
+      for (var yr = y0 + 1; yr <= y1; yr++) {
+        if ((yr - y0) % every) continue;
+        var tx = x(Date.UTC(yr, 0, 1));
+        if (tx < L || tx > L + pw) continue;
+        s += '<line x1="' + tx + '" x2="' + tx + '" y1="' + (T + ph) + '" y2="' + (T + ph + 4) + '" stroke="var(--axis)"/>';
+        s += '<text x="' + tx + '" y="' + (T + ph + 17) + '" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">' + yr + '</text>';
+      }
+      s += '<line x1="' + L + '" x2="' + (L + pw) + '" y1="' + (T + ph) + '" y2="' + (T + ph) + '" stroke="var(--axis)"/>';
+      s += '<path d="' + path(contrib) + '" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>';
+      data.forEach(function (d) { s += '<path d="' + path(d.pts) + '" fill="none" stroke="' + d.color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'; });
+      if (R > 60) {
+        var ends = data.map(function (d) { return { name: d.name, color: d.color, y: y(d.pts[d.pts.length - 1].v) }; }).sort(function (a, b) { return a.y - b.y; });
+        for (var k = 1; k < ends.length; k++) if (ends[k].y - ends[k - 1].y < 14) ends[k].y = ends[k - 1].y + 14;
+        ends.forEach(function (e) {
+          s += '<circle cx="' + (L + pw) + '" cy="' + e.y + '" r="3" fill="' + e.color + '"/>';
+          s += '<text x="' + (L + pw + 8) + '" y="' + (e.y + 4) + '" font-size="11" fill="var(--ink-2)" font-family="IBM Plex Sans Hebrew, system-ui, sans-serif">' + esc(e.name.length > 16 ? e.name.slice(0, 15) + '…' : e.name) + '</text>';
+        });
+      }
+      s += '<line class="xh" x1="0" x2="0" y1="' + T + '" y2="' + (T + ph) + '" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/>';
+      s += '<rect class="hit" x="' + L + '" y="' + T + '" width="' + pw + '" height="' + ph + '" fill="transparent"/>';
+      s += '</svg><div class="tip" hidden></div>';
+      el.innerHTML = s;
+      var svg = $('svg', el), tip = $('.tip', el), xh = $('.xh', el), hit = $('.hit', el);
+      function onMove(ev) {
+        var rect = svg.getBoundingClientRect();
+        var px = (ev.clientX - rect.left) * (W / rect.width);
+        if (px < L || px > L + pw) { hide(); return; }
+        var t = t0 + (px - L) / pw * (t1 - t0);
+        var lo = 0, hi = contrib.length - 1;
+        while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (contrib[mid].t < t) lo = mid; else hi = mid; }
+        var i = (t - contrib[lo].t) < (contrib[hi].t - t) ? lo : hi;
+        var cx = x(contrib[i].t);
+        xh.setAttribute('x1', cx); xh.setAttribute('x2', cx); xh.setAttribute('visibility', 'visible');
+        var rowsH = data.map(function (d) { return { n: d.name, c: d.color, v: d.pts[i].v }; }).sort(function (a, b) { return b.v - a.v; });
+        tip.innerHTML = '<div class="t">' + fmtDate(isoUTC(contrib[i].t)) + '</div>' + rowsH.map(function (r) {
+          return '<div class="r"><span><i class="sw" style="background:' + r.c + '"></i> ' + esc(r.n) + '</span><span class="data">' + fmt(r.v, 0) + '</span></div>';
+        }).join('') + '<div class="r muted"><span><i class="sw dash"></i> הפקדות</span><span class="data">' + fmt(contrib[i].v, 0) + '</span></div>';
+        tip.hidden = false;
+        var tw = tip.offsetWidth, left = cx * (rect.width / W) + 12;
+        if (left + tw > rect.width) left = cx * (rect.width / W) - tw - 12;
+        tip.style.left = Math.max(0, left) + 'px'; tip.style.top = '8px';
+      }
+      function hide() { tip.hidden = true; xh.setAttribute('visibility', 'hidden'); }
+      hit.addEventListener('pointermove', onMove);
+      hit.addEventListener('pointerdown', onMove);
+      hit.addEventListener('pointerleave', hide);
+    }
+    draw();
+    if (!el.__ro && window.ResizeObserver) {
+      var lastW = el.clientWidth;
+      el.__ro = new ResizeObserver(function () { if (Math.abs(el.clientWidth - lastW) > 4) { lastW = el.clientWidth; draw(); } });
+      el.__ro.observe(el);
+    }
+  }
+
+  /* =====================================================================
+     11. Portfolio view (Itamar 2040)
+     ===================================================================== */
+  RENDER.portfolio = function (sec) {
+    var pf = state.portfolio;
+    var html = '<header class="view-head"><p class="eyebrow">ITAMAR 2040</p><h1 id="h-portfolio">תיק איתמר 2040</h1>' +
+      '<p class="lede">תיק לטווח ארוך עם יעד ב-' + fmtDate(pf.targetDate) + '. מזינים את ההחזקות והשווי הנוכחי שלהן, ומקבלים חלוקה בפועל מול היעד, הצעה לחלוקת ההפקדה הבאה וסימולציה עד תאריך היעד.</p></header>';
+    html += '<section class="card" aria-labelledby="h-pf-sum"><div class="card-head"><h2 id="h-pf-sum">סיכום</h2></div><div id="pfSummary"></div></section>';
+    html += '<section class="card" aria-labelledby="h-pf-h"><div class="card-head"><h2 id="h-pf-h">החזקות</h2>' +
+      '<div class="row"><label class="lbl" for="pfCurrency">מטבע</label><select id="pfCurrency" class="select" style="width:auto">' +
+      ['USD', 'ILS', 'EUR'].map(function (c) { return '<option' + (pf.currency === c ? ' selected' : '') + '>' + c + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="stack" id="pfHoldings">' + (pf.holdings.length ? pf.holdings.map(holdingHTML).join('') :
+        '<div class="empty"><p>עדיין אין החזקות. הוסף את הנכסים שבתיק, את משקל היעד של כל אחד ואת השווי הנוכחי שלו.</p></div>') + '</div>' +
+      '<div class="row"><button type="button" class="btn primary" data-action="add-holding">הוסף החזקה</button></div></section>';
+    html += '<section class="card" aria-labelledby="h-pf-plan"><h2 id="h-pf-plan">חלוקת ההפקדה הבאה</h2>' +
+      '<p class="muted small">ההפקדה מופנית קודם להחזקות שמתחת ליעד, כדי לצמצם את הסטייה בלי למכור.</p>' +
+      '<div class="form-grid"><div class="field"><label for="pfContribution">סכום להשקעה</label>' + numInput('pfContribution', pf.contribution, { field: 'contribution' }) + '</div></div>' +
+      '<div id="pfPlan"></div></section>';
+    html += '<section class="card" aria-labelledby="h-pf-proj"><div class="card-head"><h2 id="h-pf-proj">סימולציה עד היעד</h2><span class="sim-tag">ערכים מדומים</span></div>' +
+      '<p class="muted small">חישוב ריבית דריבית על הנחת תשואה קבועה שאתה בוחר. זו לא תחזית: תשואות אמיתיות משתנות משנה לשנה.</p>' +
+      '<div class="form-grid">' +
+      '<div class="field"><label for="pfTarget">תאריך יעד</label><input id="pfTarget" class="input" type="date" value="' + esc(pf.targetDate) + '" data-pf="targetDate"></div>' +
+      '<div class="field"><label for="pfMonthly">הפקדה חודשית</label>' + numInput('pfMonthly', pf.monthly, { field: 'monthly' }) + '</div>' +
+      '<div class="field"><label for="pfReturn">הנחת תשואה שנתית</label>' + numInput('pfReturn', pf.assumedReturn, { field: 'assumedReturn', unit: '%', neg: true }) + '</div></div>' +
+      '<div id="pfProjection"></div></section>';
+    sec.innerHTML = html;
+    bindPortfolio(sec);
+    refreshPortfolio();
+  };
+  function holdingHTML(h) {
+    var id = h.id;
+    return '<div class="holding" data-hid="' + esc(id) + '"><div class="holding-grid">' +
+      '<div class="field"><label for="hn-' + id + '">שם</label><input id="hn-' + id + '" class="input" maxlength="60" value="' + esc(h.name || '') + '" data-h="name"></div>' +
+      '<div class="field"><label for="ht-' + id + '">סימול</label><input id="ht-' + id + '" class="input" maxlength="12" dir="ltr" autocapitalize="characters" value="' + esc(h.ticker || '') + '" data-h="ticker"></div>' +
+      '<div class="field"><label for="hc-' + id + '">סוג</label><select id="hc-' + id + '" class="select" data-h="cls">' +
+      Object.keys(HOLDING_CLASSES).map(function (k) { return '<option value="' + k + '"' + (h.cls === k ? ' selected' : '') + '>' + HOLDING_CLASSES[k] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="hg-' + id + '">יעד</label>' + numInput('hg-' + id, h.target, { field: 'h-target', unit: '%' }) + '</div>' +
+      '<div class="field"><label for="hv-' + id + '">שווי נוכחי</label>' + numInput('hv-' + id, h.value, { field: 'h-value' }) + '</div></div>' +
+      '<div class="holding-foot"><span data-out="hfoot-' + esc(id) + '"></span><button type="button" class="btn sm danger" data-action="del-holding">מחק</button></div></div>';
+  }
+  function bindPortfolio(sec) {
+    if (sec.__bound) return;
+    sec.__bound = true;
+    sec.addEventListener('input', function (e) {
+      var t = e.target, pf = state.portfolio;
+      var hBox = t.closest('[data-hid]');
+      if (hBox) {
+        var h = pf.holdings.filter(function (x) { return x.id === hBox.getAttribute('data-hid'); })[0];
+        if (!h) return;
+        var f = t.getAttribute('data-h'), field = t.getAttribute('data-field');
+        if (f) h[f] = f === 'ticker' ? t.value.trim().toUpperCase() : t.value;
+        if (field === 'h-target' || field === 'h-value') {
+          var v = parseNum(t.value), bad = v !== null && !(isNum(v) && v >= 0);
+          t.setAttribute('aria-invalid', bad ? 'true' : 'false');
+          h[field === 'h-target' ? 'target' : 'value'] = isNum(v) && v >= 0 ? v : null;
+        }
+        persist(); refreshPortfolio(); return;
+      }
+      var fld = t.getAttribute('data-field');
+      if (fld === 'contribution' || fld === 'monthly' || fld === 'assumedReturn') {
+        var n = parseNum(t.value), ok = n === null || (isNum(n) && (fld === 'assumedReturn' ? n > -50 && n < 50 : n >= 0));
+        t.setAttribute('aria-invalid', ok ? 'false' : 'true');
+        pf[fld] = ok && isNum(n) ? n : null;
+        persist(); refreshPortfolio();
+      }
+      if (t.getAttribute('data-pf') === 'targetDate') { pf.targetDate = t.value || '2040-01-01'; persist(); refreshPortfolio(); }
+    });
+    sec.addEventListener('change', function (e) {
+      if (e.target.id === 'pfCurrency') { state.portfolio.currency = e.target.value; persist(); refreshPortfolio(); }
+      if (e.target.getAttribute('data-h') === 'cls') { refreshPortfolio(); }
+    });
+    sec.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-action]') : null;
+      if (!b) return;
+      var act = b.getAttribute('data-action');
+      if (act === 'add-holding') {
+        var h = { id: uid(), name: '', ticker: '', cls: 'us_eq', target: null, value: null };
+        state.portfolio.holdings.push(h); persist();
+        RENDER.portfolio(sec);
+        var inp = $('#hn-' + h.id); if (inp) inp.focus();
+      } else if (act === 'del-holding') {
+        var box = b.closest('[data-hid]');
+        armOrRun(b, function () {
+          state.portfolio.holdings = state.portfolio.holdings.filter(function (x) { return x.id !== box.getAttribute('data-hid'); });
+          persist(); RENDER.portfolio(sec); toast('ההחזקה נמחקה');
+        }, 'לחץ שוב למחיקה');
+      }
+    });
+  }
+  function refreshPortfolio() {
+    var pf = state.portfolio, c = portfolioCalc(pf), cur = pf.currency;
+    var months = monthsUntil(pf.targetDate);
+    var sum = $('#pfSummary');
+    if (sum) {
+      var html = '<div class="kpis">' +
+        kpi('שווי כולל', '<span class="data">' + fmtMoney(c.total, cur) + '</span>', c.count ? c.valued + ' מתוך ' + c.count + ' החזקות עם שווי' : 'אין החזקות') +
+        kpi('זמן עד היעד', months == null ? '—' : fmt(Math.floor(months / 12), 0) + ' שנים ו-' + (months % 12) + ' ח׳', fmtDate(pf.targetDate)) +
+        kpi('סכום משקלי יעד', fmtPct(c.targetSum, 1), Math.abs(c.targetSum - 100) > 0.5 && c.count ? 'צריך להסתכם ל-100%' : 'תקין') +
+        kpi('ההחזקה הגדולה', c.max ? fmtPct(c.max.actual, 1) : '—', c.max ? esc(c.max.h.ticker || c.max.h.name || '') : '') + '</div>';
+      var notes = [];
+      if (c.count && Math.abs(c.targetSum - 100) > 0.5) notes.push(noteHTML('warn', 'משקלי היעד מסתכמים ל-' + fmtPct(c.targetSum, 1) + '. חלוקת ההפקדה תנרמל אותם, אבל עדיף לתקן.'));
+      c.rows.forEach(function (r) { if (r.drift != null && Math.abs(r.drift) > 5) notes.push(noteHTML('warn', esc(r.h.ticker || r.h.name || 'החזקה') + ' סוטה מהיעד ב-' + fmtPctSigned(r.drift, 1) + ' (נקודות אחוז).')); });
+      if (c.max && c.max.actual > 25) notes.push(noteHTML('warn', 'ריכוזיות: ' + esc(c.max.h.ticker || c.max.h.name || '') + ' מהווה ' + fmtPct(c.max.actual, 1) + ' מהתיק.'));
+      if (notes.length) html += '<ul class="notes">' + notes.join('') + '</ul>';
+      if (c.total > 0) {
+        html += '<div class="bars" aria-label="חלוקה בפועל מול יעד">' + c.rows.map(function (r) {
+          return '<div class="bar-row"><span>' + esc(r.h.ticker || r.h.name || '—') + '</span><div class="lane"><div class="act" style="width:' + clamp(r.actual || 0, 0, 100) + '%"></div>' +
+            (isNum(r.h.target) ? '<div class="tgt" style="left:calc(' + clamp(r.h.target, 0, 100) + '% - 1px)"></div>' : '') + '</div>' +
+            '<span class="data small">' + fmtPct(r.actual, 1) + (isNum(r.h.target) ? ' / ' + fmtPct(r.h.target, 0) : '') + '</span></div>';
+        }).join('') + '<p class="muted small">פס = בפועל, קו אנכי = יעד.</p></div>';
+      }
+      sum.innerHTML = html;
+    }
+    c.rows.forEach(function (r) {
+      var f = $('[data-out="hfoot-' + r.h.id + '"]');
+      if (f) f.innerHTML = 'בפועל: <span class="data">' + fmtPct(r.actual, 1) + '</span>' + (r.drift != null ? ' · סטייה: <span class="data" style="color:' + (Math.abs(r.drift) > 5 ? 'var(--warn)' : 'var(--ink-2)') + '">' + fmtPctSigned(r.drift, 1) + '</span>' : '');
+    });
+    var plan = $('#pfPlan');
+    if (plan) {
+      var P = contributionPlan(pf, pf.contribution);
+      if (!isNum(pf.contribution) || pf.contribution <= 0) plan.innerHTML = '<p class="muted small">הזן סכום כדי לראות הצעת חלוקה.</p>';
+      else if (!P) plan.innerHTML = '<ul class="notes">' + noteHTML('warn', 'צריך משקלי יעד להחזקות כדי לחלק את ההפקדה.') + '</ul>';
+      else plan.innerHTML = (P.normalized ? '<ul class="notes">' + noteHTML('info', 'משקלי היעד נורמלו ל-100% לצורך החישוב.') + '</ul>' : '') +
+        '<div class="table-wrap"><table><thead><tr><th>החזקה</th><th class="num">לקנות</th></tr></thead><tbody>' +
+        P.plan.map(function (x) { return '<tr><td>' + esc(x.h.ticker || x.h.name || '—') + '</td><td class="num data">' + fmtMoney(x.buy, cur) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    }
+    var proj = $('#pfProjection');
+    if (proj) {
+      if (!isNum(pf.assumedReturn)) { proj.innerHTML = '<p class="muted small">הזן הנחת תשואה שנתית כדי להריץ את הסימולציה.</p>'; }
+      else {
+        var rs = [pf.assumedReturn - 2, pf.assumedReturn, pf.assumedReturn + 2];
+        proj.innerHTML = '<div class="table-wrap"><table><thead><tr><th>הנחת תשואה</th><th class="num">שווי מדומה ב-' + fmtDate(pf.targetDate) + '</th><th class="num">סך ההפקדות</th></tr></thead><tbody>' +
+          rs.map(function (r, i) {
+            var F = projectFV(c.total, pf.monthly, r, months);
+            return '<tr' + (i === 1 ? ' style="font-weight:700"' : '') + '><td class="data">' + fmtPct(r, 1) + (i === 1 ? ' (ההנחה שלך)' : '') + '</td><td class="num data">' + (F ? fmtMoney(F.fv, cur) : '—') +
+              '</td><td class="num data">' + (F ? fmtMoney(F.paid, cur) : '—') + '</td></tr>';
+          }).join('') + '</tbody></table></div><p class="muted small">שורות ±2% מראות רגישות להנחה. מבוסס על השווי הנוכחי (' + fmtMoney(c.total, cur) + '), ‏' + fmt(months, 0) + ' חודשים והפקדה חודשית של ' + fmtMoney(pf.monthly || 0, cur) + '.</p>';
+      }
+    }
+  }
+
+  /* =====================================================================
+     12. Dashboard view
+     ===================================================================== */
+  RENDER.dashboard = function (sec) {
+    var pf = state.portfolio, c = portfolioCalc(pf), months = monthsUntil(pf.targetDate);
+    var scored = state.assets.map(scoreAsset);
+    var html = '<header class="view-head"><p class="eyebrow">QD FUSION</p><h1 id="h-dashboard">לוח בקרה</h1>' +
+      '<p class="lede">תמונת מצב של התיק, של ציוני הנכסים ושל מה שדורש תשומת לב. כל מספר כאן הוזן על ידך. האפליקציה לא מושכת נתוני שוק ולא משלימה נתונים חסרים.</p></header>';
+    html += '<section class="card" aria-labelledby="h-d-pf"><div class="card-head"><h2 id="h-d-pf">תיק איתמר 2040</h2><a href="#portfolio" data-nav="portfolio" class="btn sm ghost">לתיק</a></div>';
+    if (!c.count) html += '<div class="empty"><p>עדיין אין החזקות בתיק.</p><a class="btn primary" href="#portfolio" data-nav="portfolio">הוסף החזקות</a></div>';
+    else html += '<div class="kpis">' + kpi('שווי כולל', '<span class="data">' + fmtMoney(c.total, pf.currency) + '</span>', c.count + ' החזקות') +
+      kpi('זמן עד היעד', months == null ? '—' : fmt(months / 12, 1) + ' שנים', fmtDate(pf.targetDate)) +
+      kpi('סטייה מרבית מיעד', (function () { var m = null; c.rows.forEach(function (r) { if (r.drift != null && (m == null || Math.abs(r.drift) > Math.abs(m))) m = r.drift; }); return m == null ? '—' : fmtPctSigned(m, 1); })(), 'נקודות אחוז') +
+      kpi('ההחזקה הגדולה', c.max ? fmtPct(c.max.actual, 1) : '—', c.max ? esc(c.max.h.ticker || c.max.h.name || '') : '') + '</div>';
+    html += '</section>';
+
+    html += '<section class="card" aria-labelledby="h-d-alerts"><h2 id="h-d-alerts">דורש תשומת לב</h2><ul class="notes">' + alertsHTML(scored, c) + '</ul></section>';
+
+    html += '<section class="card" aria-labelledby="h-d-scores"><div class="card-head"><h2 id="h-d-scores">ציוני נכסים</h2><a href="#scoring" data-nav="scoring" class="btn sm ghost">למנועי הציון</a></div>';
+    if (!scored.length) html += '<div class="empty"><p>אין נכסים מדורגים.</p><a class="btn primary" href="#scoring" data-nav="scoring">הוסף נכס</a></div>';
+    else {
+      html += '<div class="grid-2"><div class="table-wrap"><table><thead><tr><th>נכס</th><th class="num">הזדמנות</th><th class="num">סיכון</th><th class="num">כיסוי</th><th>החלטה</th></tr></thead><tbody>' +
+        scored.map(function (S) {
+          var cov = Math.min(S.o.coverage, S.r.coverage);
+          return '<tr class="clickable" data-nav="scoring" data-asset="' + esc(S.asset.id) + '" tabindex="0"><td>' + esc(S.asset.name) + (S.asset.demo ? ' <span class="chip demo">מדומה</span>' : '') +
+            (S.asset.ticker ? '<div class="muted small data">' + esc(S.asset.ticker) + '</div>' : '') + '</td>' +
+            '<td class="num data">' + (S.o.score == null ? '—' : fmt(S.o.score, 0)) + '</td><td class="num data">' + (S.r.score == null ? '—' : fmt(S.r.score, 0)) + '</td>' +
+            '<td class="num data">' + fmtPct(cov * 100, 0) + '</td><td>' + toneChip(S.d) + '</td></tr>';
+        }).join('') + '</tbody></table></div><div class="matrix-wrap">' + matrixSVG(scored, state.activeAssetId) + '</div></div>' +
+        '<p class="muted small">עיגול מלא = ציון אמין. עיגול חלול = כיסוי נתונים נמוך. הקש על שורה כדי לערוך את הנכס.</p>';
+    }
+    html += '</section>';
+
+    html += settingsCardHTML();
+    sec.innerHTML = html;
+    bindDashboard(sec);
+  };
+  function alertsHTML(scored, c) {
+    var items = [];
+    if (!Store.available) items.push(noteHTML('error', 'הדפדפן חוסם שמירה מקומית, ולכן הנתונים יימחקו כשתסגור את הדף. פתח את האפליקציה ישירות ב-Safari (לא בתצוגה מקדימה), או גבה את הנתונים בעזרת "העתק גיבוי".'));
+    var missingMk = MARKET_KEYS.filter(function (k) { return !isNum(state.market[k]); });
+    var realAssets = scored.filter(function (S) { return !S.asset.demo; });
+    if (realAssets.length && missingMk.length) items.push(noteHTML('warn', 'חסרים נתוני שוק: ' + missingMk.map(function (k) { return esc(IND[k].label); }).join(', ') + '. <a href="#scoring" data-nav="scoring">להזנה</a>'));
+    if (realAssets.length && !state.marketAsOf) items.push(noteHTML('info', 'לא צוין תאריך לנתוני השוק.'));
+    else if (state.marketAsOf) { var dd = daysBetweenISO(state.marketAsOf, todayISO()); if (dd != null && dd > 7) items.push(noteHTML('warn', 'נתוני השוק בני ' + dd + ' ימים.')); }
+    scored.forEach(function (S) {
+      if (S.asset.demo) return;
+      var cov = Math.min(S.o.coverage, S.r.coverage);
+      if (!(S.o.reliable && S.r.reliable)) items.push(noteHTML('warn', esc(S.asset.name) + ': כיסוי נתונים ' + fmtPct(cov * 100, 0) + '. הציון אינו אמין. <a href="#scoring" data-nav="scoring" data-asset="' + esc(S.asset.id) + '">להשלמה</a>'));
+      else if (S.d.key === 'Q1' || S.d.key === 'Q3') items.push(noteHTML(S.d.key === 'Q1' ? 'good' : 'error', esc(S.asset.name) + ': ' + esc(S.d.label) + '. ' + esc(S.d.text)));
+    });
+    if (c.count && Math.abs(c.targetSum - 100) > 0.5) items.push(noteHTML('warn', 'משקלי היעד בתיק מסתכמים ל-' + fmtPct(c.targetSum, 1) + ' ולא ל-100%.'));
+    c.rows.forEach(function (r) { if (r.drift != null && Math.abs(r.drift) > 5) items.push(noteHTML('warn', esc(r.h.ticker || r.h.name || 'החזקה') + ' סוטה מהיעד ב-' + fmtPctSigned(r.drift, 1) + '.')); });
+    if (scored.some(function (S) { return S.asset.demo; })) items.push(noteHTML('info', 'נכס ההדגמה מכיל ערכים מדומים להמחשה בלבד. אפשר למחוק אותו במסך מנועי הציון.'));
+    if (!items.length) items.push(noteHTML('good', 'אין התראות פתוחות.'));
+    return items.join('');
+  }
+  function settingsCardHTML() {
+    return '<section class="card" aria-labelledby="h-d-set"><h2 id="h-d-set">הגדרות ונתונים</h2>' +
+      '<div class="form-grid"><div class="field"><label for="setOppHi">סף הזדמנות להחלטה</label>' + numInput('setOppHi', state.settings.oppHi, { field: 'oppHi' }) + '</div>' +
+      '<div class="field"><label for="setRiskHi">סף סיכון להחלטה</label>' + numInput('setRiskHi', state.settings.riskHi, { field: 'riskHi' }) + '</div></div>' +
+      '<p class="muted small">' + (Store.available ? 'הנתונים נשמרים רק בדפדפן הזה, במכשיר הזה. ב-iPhone, אפליקציה שהוספת למסך הבית שומרת נתונים בנפרד מ-Safari. כדי להעביר נתונים בין מכשירים או לגבות אותם, השתמש בגיבוי.' : 'השמירה המקומית חסומה כאן. גבה את הנתונים לפני שתסגור את הדף.') + '</p>' +
+      '<div class="row"><button type="button" class="btn" data-action="copy-backup">העתק גיבוי</button><button type="button" class="btn" data-action="dl-backup">הורד קובץ גיבוי</button>' +
+      '<label class="btn file-label">ייבוא מקובץ<input id="importFile" type="file" accept=".json,application/json,text/plain" aria-label="ייבוא גיבוי מקובץ"></label></div>' +
+      '<textarea id="backupOut" class="textarea" hidden readonly aria-label="טקסט הגיבוי"></textarea>' +
+      '<details class="more"><summary>ייבוא מטקסט</summary><div class="stack"><label class="sr-only" for="importText">טקסט גיבוי</label><textarea id="importText" class="textarea" placeholder="{&quot;v&quot;:1,…}"></textarea>' +
+      '<div class="row"><button type="button" class="btn" data-action="import-text">ייבא</button></div></div></details>' +
+      '<p class="muted small">ייבוא מחליף את כל הנתונים הנוכחיים.</p>' +
+      '<div class="row"><button type="button" class="btn danger" data-action="reset-all">מחק את כל הנתונים</button></div></section>';
+  }
+  function importBackup(text) {
+    var obj;
+    try { obj = JSON.parse(text); } catch (e) { toast('הטקסט אינו JSON תקין'); return false; }
+    if (!obj || obj.v !== 1 || !Array.isArray(obj.assets) || !obj.portfolio) { toast('זה לא קובץ גיבוי של QD FUSION'); return false; }
+    state = mergeDefaults(defaultState(), obj);
+    state.seededDemo = true;
+    migrateState();
+    btRebuild();
+    persist(true);
+    toast('הגיבוי יובא');
+    return true;
+  }
+  function bindDashboard(sec) {
+    if (sec.__bound) return;
+    sec.__bound = true;
+    sec.addEventListener('input', function (e) {
+      var f = e.target.getAttribute('data-field');
+      if (f !== 'oppHi' && f !== 'riskHi') return;
+      var v = parseNum(e.target.value), ok = isNum(v) && v > 0 && v < 100;
+      e.target.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      if (ok) { state.settings[f] = v; persist(); }
+    });
+    sec.addEventListener('change', function (e) {
+      var f = e.target.getAttribute('data-field');
+      if (f === 'oppHi' || f === 'riskHi') { RENDER.dashboard(sec); return; }
+      if (e.target.id === 'importFile') {
+        readFile(e.target.files && e.target.files[0], function (text) { if (importBackup(text)) RENDER.dashboard(sec); });
+      }
+    });
+    sec.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('tr[data-nav]')) { e.preventDefault(); e.target.click(); }
+    });
+    sec.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-action]') : null;
+      if (!b) return;
+      var act = b.getAttribute('data-action');
+      var json = function () { return JSON.stringify(state, null, 1); };
+      if (act === 'copy-backup') copyText(json(), 'הגיבוי הועתק. שמור אותו בפתקים או בקובץ.', $('#backupOut', sec));
+      else if (act === 'dl-backup') downloadText(json(), 'qd-fusion-backup-' + todayISO() + '.json', 'application/json');
+      else if (act === 'import-text') { if (importBackup($('#importText', sec).value)) RENDER.dashboard(sec); }
+      else if (act === 'reset-all') armOrRun(b, function () {
+        state = defaultState(); state.seededDemo = true; btRebuild();
+        persist(true); RENDER.dashboard(sec); toast('כל הנתונים נמחקו');
+      }, 'לחץ שוב כדי למחוק הכול');
+    });
+  }
+
+  /* =====================================================================
+     13. Boot
+     ===================================================================== */
+  updateStorageBadge();
+  getDownloads();
+  if (!Store.available) showBanner('הדפדפן חוסם שמירה מקומית (למשל בתצוגה מקדימה או בגלישה פרטית). האפליקציה עובדת, אבל הנתונים לא יישמרו אחרי סגירת הדף.');
+  persist();
+  show(viewFromHash(), { keepScroll: true });
+})();
+</script>
+</body>
+</html>
