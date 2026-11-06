@@ -1,0 +1,65 @@
+{
+  "format": "qd-fusion-claude-data",
+  "version": 1,
+  "generatedAt": "2026-11-06T10:04:00Z",
+  "title": "נתוני שוק, SPY ו-GLD",
+  "note": "כל ערך מגיע ממקור שפורסם. ערכים מחושבים מסומנים 'מחושב'. שדות שלא נמצא להם מקור אמין נשארו ריקים.",
+  "market": {
+    "asOf": "2026-11-04",
+    "values": { "vix": 16.61, "hy_oas": 3.40, "hy_oas_chg": 70, "curve": 0.86 },
+    "sources": {
+      "vix": { "text": "VIX: סגירה 16.61 ב-4.11.2026", "url": "https://streetstats.finance/markets/volatility" },
+      "hy_oas": { "text": "מרווח ICE BofA US High Yield ‏(OAS): ‏3.40% ב-3.11.2026", "url": "https://stock-marketdata.com/high-yield-index-option-adjusted-spread" },
+      "hy_oas_chg": { "text": "מחושב: 3.40% (3.11) פחות 2.70% (21.8, הערך המתועד הקרוב ביותר לתחילת אוגוסט) = ‎+70 נ\"ב בקירוב", "url": "https://fred.stlouisfed.org/graph/?g=1iMh5" },
+      "curve": { "text": "מרווח 10 שנים פחות 3 חודשים (T10Y3M): ‏0.86% ב-20.10.2026, הערך הרשמי האחרון שנמצא", "url": "https://fred.stlouisfed.org/graph/?graph_id=530791" }
+    }
+  },
+  "assets": [
+    {
+      "ticker": "SPY",
+      "name": "S&P 500 (SPY)",
+      "type": "etf",
+      "asOf": "2026-11-04",
+      "publishedDate": "2026-11-05",
+      "inputs": {
+        "pe_current": 18.7,
+        "pe_median": 19.1,
+        "eps_growth": 16.3,
+        "eps_rev3m": 7.1,
+        "drawdown": -1.9,
+        "eps_since_peak": 2.0,
+        "px_vs_200": 5.1,
+        "mom_3m": -0.2
+      },
+      "sources": {
+        "pe_current": { "text": "מכפיל רווח צפוי ל-12 חודשים של S&P 500: ‏18.7 (FactSet, ‏30.10.2026)", "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_103026.pdf?AccountID=13354688" },
+        "pe_median": { "text": "ממוצע 10 שנים של המכפיל הצפוי: ‏19.1 (FactSet, ‏30.10.2026). FactSet מפרסמת ממוצע ולא חציון, והוא משמש כאן כקירוב.", "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_103026.pdf?AccountID=13354688" },
+        "eps_growth": { "text": "צמיחת רווחים צפויה ל-2027: ‏16.3% (FactSet, ‏30.10.2026)", "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_103026.pdf?AccountID=13354688" },
+        "eps_rev3m": { "text": "מחושב: EPS צפוי = מחיר המדד חלקי המכפיל הצפוי. ב-7.8: ‏7,709.96/20.0, וב-30.10: ‏7,720.39/18.7. שינוי של ‎+7.1% בכ-12 שבועות.", "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_080726.pdf" },
+        "drawdown": { "text": "מחושב: סגירה 766.81 ב-4.11 מול שיא 52 שבועות של 781.62", "url": "https://www.financialtechwiz.com/stocks/spy/" },
+        "eps_since_peak": { "text": "קירוב: שיא המדד נקבע בתחילת אוקטובר, ותחזית ה-EPS ל-12 חודשים עלתה ב-2.5% מ-30.9 עד 29.10 (FactSet). כל ערך ≥ 0 נותן אותו ציון.", "url": "https://advantage.factset.com/hubfs/Website/Resources%20Section/Research%20Desk/Earnings%20Insight/EarningsInsight_103026.pdf?AccountID=13354688" },
+        "px_vs_200": { "text": "מחושב: 766.81 מול ממוצע 200 יום של 729.91 (4.11)", "url": "https://www.financialtechwiz.com/stocks/spy/" },
+        "mom_3m": { "text": "תשואה ב-3 חודשים: ‎-0.2% (נכון ל-4.11)", "url": "https://www.financialtechwiz.com/stocks/spy/" }
+      },
+      "missing": ["fcf_yield", "roic", "nd_ebitda"]
+    },
+    {
+      "ticker": "GLD",
+      "name": "זהב (GLD)",
+      "type": "commodity",
+      "asOf": "2026-11-04",
+      "publishedDate": "2026-11-05",
+      "inputs": {
+        "drawdown": -24.9,
+        "px_vs_200": -9.8,
+        "mom_3m": -0.4
+      },
+      "sources": {
+        "drawdown": { "text": "מחושב: סגירה 372.49 ב-4.11 מול סגירת השיא 495.90 ב-29.1.2026", "url": "https://247wallst.com/investing/2026/11/05/gold-just-had-its-best-day-since-august-back-above-4000/" },
+        "px_vs_200": { "text": "מחושב: 372.49 מול ממוצע 200 יום של כ-413 (Financhill, מתוך ניתוח QD מ-4.11)", "url": "https://financhill.com/stock-price-chart/gld-technical-analysis" },
+        "mom_3m": { "text": "מחושב: 372.49 (4.11) מול 374.16 (4.8.2026)", "url": "https://ca.finance.yahoo.com/quote/GLD/history/" }
+      },
+      "missing": []
+    }
+  ]
+}

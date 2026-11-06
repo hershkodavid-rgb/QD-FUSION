@@ -258,6 +258,8 @@ th, td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--li
 th { font-size: .76rem; font-weight: 600; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
 tr:last-child td { border-bottom: 0; }
 td.num, th.num { text-align: left; }
+.src-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: .86rem; line-height: 1.5; }
+.src-list a { color: var(--accent); }
 /* Column titles of number columns are Hebrew words: keep them in the body font (the mono font has no Hebrew, and Safari spaces the letters out). */
 th.num { font-family: var(--f-body); font-variant-numeric: normal; direction: rtl; }
 tr.clickable { cursor: pointer; }
@@ -1816,6 +1818,10 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
         '<div class="field"><label for="metaPub">תאריך פרסום הנתונים</label><input id="metaPub" class="input" type="date" value="' + esc(a.publishedDate || '') + '" data-meta="publishedDate"></div></div>' +
         '<p class="muted small">זמינות: <span data-out="asset-stamp">' + stampText(a.updatedAt) + '</span>. נרשם אוטומטית בכל שינוי בנתוני הנכס.</p>';
       if (a.demo) html += '<p class="sim-tag">נכס הדגמה: כל הערכים מדומים ואינם נתוני שוק</p>';
+      if (a.claude && a.claude.sources && Object.keys(a.claude.sources).length) {
+        html += '<details class="more"><summary>מקורות הנתונים (Claude)</summary>' + claudeSourcesHTML(a.claude.sources, a.inputs) +
+          (a.claude.missing && a.claude.missing.length ? '<p class="muted small">לא נמצא מקור אמין, ולכן נשאר ריק: ' + esc(a.claude.missing.map(labelOf).join(', ')) + '.</p>' : '') + '</details>';
+      }
     }
     html += '</section>';
 
@@ -2727,7 +2733,8 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
     var pf = state.portfolio, c = portfolioCalc(pf), months = monthsUntil(pf.targetDate);
     var scored = state.assets.map(scoreAsset);
     var html = '<header class="view-head"><p class="eyebrow">QD FUSION</p><h1 id="h-dashboard">לוח בקרה</h1>' +
-      '<p class="lede">תמונת מצב של התיק, של ציוני הנכסים ושל מה שדורש תשומת לב. כל מספר כאן הוזן על ידך. האפליקציה לא מושכת נתוני שוק ולא משלימה נתונים חסרים.</p></header>';
+      '<p class="lede">תמונת מצב של התיק, של ציוני הנכסים ושל מה שדורש תשומת לב. כל מספר כאן הוזן על ידך או נטען מקובץ הנתונים של Claude, עם מקור ותאריך. האפליקציה לא משלימה נתונים חסרים.</p></header>';
+    html += claudeCardHTML();
     html += '<section class="card" aria-labelledby="h-d-pf"><div class="card-head"><h2 id="h-d-pf">תיק איתמר 2040</h2><a href="#portfolio" data-nav="portfolio" class="btn sm ghost">לתיק</a></div>';
     if (!c.count) html += '<div class="empty"><p>עדיין אין החזקות בתיק.</p><a class="btn primary" href="#portfolio" data-nav="portfolio">הוסף החזקות</a></div>';
     else html += '<div class="kpis">' + kpi('שווי כולל', '<span class="data">' + fmtMoney(c.total, pf.currency) + '</span>', c.count + ' החזקות') +
@@ -2756,7 +2763,107 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
     html += settingsCardHTML();
     sec.innerHTML = html;
     bindDashboard(sec);
+    checkClaudeData(sec);
   };
+
+  /* =====================================================================
+     Claude data file: data/claude-data.json, published next to the app.
+     Loading merges it in: market values, and assets matched by ticker
+     (new tickers are added). Nothing the user entered is deleted.
+     ===================================================================== */
+  var CLAUDE_DATA_URL = 'data/claude-data.json';
+  var claudeCheck = null;
+  function fetchClaudeData() {
+    return fetch(CLAUDE_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }
+  function claudeSourcesHTML(sources, inputs) {
+    var keys = Object.keys(sources || {});
+    if (!keys.length) return '';
+    return '<ul class="src-list">' + keys.map(function (k) {
+      var s = sources[k] || {}, v = inputs ? inputs[k] : null;
+      var val = isNum(v) ? ' <span class="data">' + esc(fmt(v, 2)) + (unitOf(k) ? ' ' + esc(unitOf(k)) : '') + '</span>' : '';
+      var link = s.url && /^https:\/\//.test(s.url) ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">מקור</a>' : '';
+      return '<li><strong>' + esc(labelOf(k)) + '</strong>' + val + '<br><span class="muted">' + esc(s.text || '') + '</span>' + link + '</li>';
+    }).join('') + '</ul>';
+  }
+  function claudeCardHTML() {
+    var cd = state.claudeData;
+    var html = '<section class="card" aria-labelledby="h-d-claude"><h2 id="h-d-claude">נתונים מ-Claude</h2>';
+    if (cd && cd.loadedAt) {
+      html += '<p class="muted small">נטען לאחרונה ב-' + esc(fmtStamp(cd.loadedAt)) + '. הקובץ הוכן ב-' + esc(fmtStamp(cd.generatedAt)) + '.</p>';
+    } else {
+      html += '<p class="muted small">Claude מכין קובץ נתונים שבו לכל מספר יש מקור ותאריך. טעינה מעדכנת את נתוני השוק ואת הנכסים לפי הסימול, ומוסיפה נכסים חסרים. היא לא מוחקת שום דבר שהזנת.</p>';
+    }
+    html += '<p class="small" data-out="claude-status" aria-live="polite"></p>' +
+      '<div class="row"><button type="button" class="btn primary" data-action="load-claude">טען נתונים מ-Claude</button></div>';
+    if (cd && cd.loadedAt) {
+      html += '<details class="more"><summary>מה נטען ומאיפה</summary><div class="stack">';
+      if (cd.note) html += '<p class="muted small">' + esc(cd.note) + '</p>';
+      if (cd.market && cd.market.sources) html += '<h3 class="small">נתוני שוק · נכון ל-' + esc(fmtDate(cd.market.asOf)) + '</h3>' + claudeSourcesHTML(cd.market.sources, cd.market.values);
+      (cd.assets || []).forEach(function (x) {
+        html += '<h3 class="small">' + esc(x.name || x.ticker) + ' <span class="data">' + esc(x.ticker || '') + '</span></h3>' + claudeSourcesHTML(x.sources, x.inputs);
+        if (x.missing && x.missing.length) html += '<p class="muted small">לא נמצא מקור אמין, ולכן נשאר ריק: ' + esc(x.missing.map(labelOf).join(', ')) + '.</p>';
+      });
+      html += '</div></details>';
+    }
+    return html + '</section>';
+  }
+  function checkClaudeData(sec) {
+    var out = $('[data-out="claude-status"]', sec);
+    if (!out || typeof fetch !== 'function') return;
+    if (!claudeCheck) claudeCheck = fetchClaudeData().then(function (d) { return d; }, function () { return null; });
+    claudeCheck.then(function (d) {
+      if (!d || !out.isConnected) return;
+      var cd = state.claudeData;
+      if (!cd || !cd.generatedAt) out.textContent = 'יש קובץ נתונים מוכן מ-' + fmtStamp(d.generatedAt) + '.';
+      else if (d.generatedAt && d.generatedAt !== cd.generatedAt) out.textContent = 'יש קובץ חדש יותר מ-' + fmtStamp(d.generatedAt) + '.';
+      else out.textContent = 'הנתונים שטענת הם העדכניים ביותר.';
+    });
+  }
+  function applyClaudeData(d) {
+    if (!d || d.format !== 'qd-fusion-claude-data' || !Array.isArray(d.assets)) throw new Error('bad format');
+    var nowIso = new Date().toISOString(), touched = [], added = 0, updated = 0;
+    if (d.market && d.market.values) {
+      MARKET_KEYS.forEach(function (k) { var v = d.market.values[k]; if (isNum(v)) state.market[k] = v; });
+      if (d.market.asOf) state.marketAsOf = d.market.asOf;
+      state.marketUpdatedAt = nowIso;
+    }
+    d.assets.forEach(function (src) {
+      var tk = String(src.ticker || '').trim().toUpperCase();
+      if (!tk) return;
+      var a = null;
+      state.assets.forEach(function (x) { if (!a && !x.demo && String(x.ticker || '').trim().toUpperCase() === tk) a = x; });
+      if (!a) {
+        var type = ASSET_TYPES[src.type] ? src.type : 'other';
+        var preset = NA_PRESETS[type] || { opp: [], risk: [] };
+        a = { id: uid(), name: String(src.name || tk).slice(0, 60), ticker: tk, type: type, demo: false, asOf: '',
+          na: { opp: preset.opp.slice(), risk: preset.risk.slice() }, inputs: {} };
+        state.assets.push(a); added++;
+      } else updated++;
+      a.inputs = a.inputs || {};
+      Object.keys(src.inputs || {}).forEach(function (k) {
+        var v = src.inputs[k];
+        if (IND[k] && IND[k].scope === 'asset' && isNum(v)) a.inputs[k] = v;
+      });
+      if (src.asOf) a.asOf = src.asOf;
+      if (src.publishedDate) a.publishedDate = src.publishedDate;
+      a.updatedAt = nowIso;
+      a.claude = { at: d.generatedAt || '', sources: src.sources || {}, missing: src.missing || [] };
+      touched.push(a);
+    });
+    var act = activeAsset();
+    if ((!act || act.demo) && touched.length) state.activeAssetId = touched[0].id;
+    touched.forEach(function (a) { recordScore(a); });
+    state.claudeData = {
+      generatedAt: d.generatedAt || '', loadedAt: nowIso, title: d.title || '', note: d.note || '', market: d.market || null,
+      assets: d.assets.map(function (x) { return { ticker: x.ticker, name: x.name, inputs: x.inputs || {}, sources: x.sources || {}, missing: x.missing || [] }; })
+    };
+    persist(true);
+    return { added: added, updated: updated };
+  }
   function alertsHTML(scored, c) {
     var items = [];
     if (!Store.available) items.push(noteHTML('error', 'הדפדפן חוסם שמירה מקומית, ולכן הנתונים יימחקו כשתסגור את הדף. פתח את האפליקציה ישירות ב-Safari (לא בתצוגה מקדימה), או גבה את הנתונים בעזרת "העתק גיבוי".'));
@@ -2830,6 +2937,25 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
       if (act === 'copy-backup') copyText(json(), 'הגיבוי הועתק. שמור אותו בפתקים או בקובץ.', $('#backupOut', sec));
       else if (act === 'dl-backup') downloadText(json(), 'qd-fusion-backup-' + todayISO() + '.json', 'application/json');
       else if (act === 'import-text') { if (importBackup($('#importText', sec).value)) RENDER.dashboard(sec); }
+      else if (act === 'load-claude') {
+        if (typeof fetch !== 'function') { toast('הדפדפן הזה לא תומך בטעינה'); return; }
+        b.disabled = true; b.textContent = 'טוען…';
+        claudeCheck = null;
+        fetchClaudeData().then(function (d) {
+          var res = applyClaudeData(d);
+          RENDER.dashboard(sec);
+          var parts = [];
+          if (res.updated) parts.push(res.updated === 1 ? 'נכס אחד עודכן' : res.updated + ' נכסים עודכנו');
+          if (res.added) parts.push(res.added === 1 ? 'נכס אחד נוסף' : res.added + ' נכסים נוספו');
+          toast('נתוני השוק נטענו' + (parts.length ? '. ' + parts.join(', ') : '') + '.');
+        }, function () {
+          b.disabled = false; b.textContent = 'טען נתונים מ-Claude';
+          toast('לא הצלחתי לטעון את קובץ הנתונים. בדוק את החיבור לאינטרנט ונסה שוב.');
+        }).catch(function () {
+          b.disabled = false; b.textContent = 'טען נתונים מ-Claude';
+          toast('קובץ הנתונים לא במבנה הצפוי.');
+        });
+      }
       else if (act === 'reset-all') armOrRun(b, function () {
         state = defaultState(); state.seededDemo = true; btRebuild();
         persist(true); RENDER.dashboard(sec); toast('כל הנתונים נמחקו');
