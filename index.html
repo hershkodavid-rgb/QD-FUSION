@@ -1542,11 +1542,34 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
     $('#bannerText').textContent = msg;
     b.hidden = false;
   }
+  /* Only errors thrown by this page's own code get the red banner. Errors from
+     scripts the browser or its extensions inject (Safari reports them as
+     "Script error." or with a webkit-masked-url / extension address) are not
+     the app's and are only logged. */
+  var PAGE_URL = String(location.href).split('#')[0].split('?')[0];
+  function isOwnSource(src) {
+    if (!src) return false;
+    return String(src).split('#')[0].split('?')[0] === PAGE_URL;
+  }
+  function isOwnStack(stack) {
+    return !!stack && String(stack).indexOf(PAGE_URL) !== -1;
+  }
   window.addEventListener('error', function (e) {
-    showBanner('אירעה שגיאה בקוד: ' + (e && e.message ? e.message : 'לא ידועה') + '. הנתונים השמורים לא נפגעו. נסה לרענן את הדף.');
+    if (!e || e.target !== window) return; /* failed image or font loads are not code errors */
+    var msg = e.message || '';
+    if (/^script error\.?$/i.test(msg) || !isOwnSource(e.filename)) {
+      try { console.warn('[QD] external script error ignored:', msg, e.filename || ''); } catch (x) { /* ignore */ }
+      return;
+    }
+    showBanner('אירעה שגיאה בקוד: ' + (msg || 'לא ידועה') + '. הנתונים השמורים לא נפגעו. נסה לרענן את הדף.');
   });
   window.addEventListener('unhandledrejection', function (e) {
-    showBanner('פעולה נכשלה: ' + (e && e.reason && e.reason.message ? e.reason.message : 'שגיאה לא ידועה') + '.');
+    var r = e && e.reason;
+    if (!(r && isOwnStack(r.stack))) {
+      try { console.warn('[QD] external rejection ignored:', r); } catch (x) { /* ignore */ }
+      return;
+    }
+    showBanner('פעולה נכשלה: ' + (r.message || 'שגיאה לא ידועה') + '.');
   });
 
   var toastTimer = null;
