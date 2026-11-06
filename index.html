@@ -2797,6 +2797,7 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
     } else {
       html += '<p class="muted small">Claude מכין קובץ נתונים שבו לכל מספר יש מקור ותאריך. טעינה מעדכנת את נתוני השוק ואת הנכסים לפי הסימול, ומוסיפה נכסים חסרים. היא לא מוחקת שום דבר שהזנת.</p>';
     }
+    html += '<p class="muted small">האפליקציה בודקת לבד אם יש קובץ חדש בכל פעם שהיא נפתחת, וטוענת אותו. הכפתור טוען אותו שוב ידנית.</p>';
     html += '<p class="small" data-out="claude-status" aria-live="polite"></p>' +
       '<div class="row"><button type="button" class="btn primary" data-action="load-claude">טען נתונים מ-Claude</button></div>';
     if (cd && cd.loadedAt) {
@@ -2971,6 +2972,26 @@ details.method summary, details.more summary { cursor: pointer; font-weight: 600
   if (!Store.available) showBanner('הדפדפן חוסם שמירה מקומית (למשל בתצוגה מקדימה או בגלישה פרטית). האפליקציה עובדת, אבל הנתונים לא יישמרו אחרי סגירת הדף.');
   persist();
   show(viewFromHash(), { keepScroll: true });
+
+  /* Auto-sync: when the app opens or comes back to the screen, load a newer Claude data file by itself. */
+  var lastAutoSync = 0;
+  function autoSyncClaude() {
+    if (typeof fetch !== 'function') return;
+    var now = Date.now();
+    if (now - lastAutoSync < 5 * 60 * 1000) return;
+    lastAutoSync = now;
+    fetchClaudeData().then(function (d) {
+      if (!d || !d.generatedAt) return;
+      if (state.claudeData && state.claudeData.generatedAt === d.generatedAt) return;
+      var res = applyClaudeData(d);
+      claudeCheck = null;
+      renderView(currentView);
+      var n = res.updated + res.added;
+      toast('נטענו נתונים חדשים מ-Claude' + (n ? ' (' + (n === 1 ? 'נכס אחד' : n + ' נכסים') + ' ונתוני השוק)' : '') + '.');
+    }).catch(function () { /* offline or no file: the button in the dashboard still works */ });
+  }
+  autoSyncClaude();
+  DOC.addEventListener('visibilitychange', function () { if (DOC.visibilityState === 'visible') autoSyncClaude(); });
 })();
 </script>
 </body>
